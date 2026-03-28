@@ -53,6 +53,17 @@ public class AppointmentController {
             return ResponseEntity.badRequest().body("This time slot is already booked for the selected stylist.");
         }
 
+        // User conflict prevention
+        boolean hasUserConflict = appointmentRepository.findAll().stream()
+                .anyMatch(a -> a.getDate().equals(request.getDate()) 
+                            && a.getUser().getId().equals(request.getUserId()) 
+                            && a.getTimeSlot().equals(request.getTimeSlot())
+                            && a.getStatus() != AppointmentStatus.CANCELLED);
+
+        if (hasUserConflict) {
+            return ResponseEntity.badRequest().body("You already have an appointment at this time.");
+        }
+
         User user = userRepository.findById(request.getUserId())
                 .orElseThrow(() -> new RuntimeException("User not found"));
         Service service = serviceRepository.findById(request.getServiceId())
