@@ -1,14 +1,21 @@
 package com.saloon.controller;
 
+import com.saloon.model.Appointment;
+import com.saloon.model.AppointmentStatus;
 import com.saloon.model.Service;
 import com.saloon.model.Staff;
+import com.saloon.repository.AppointmentRepository;
 import com.saloon.repository.ServiceRepository;
 import com.saloon.repository.StaffRepository;
+import com.saloon.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
@@ -17,11 +24,48 @@ import java.util.List;
 public class AdminController {
 
     @Autowired
+    private AppointmentRepository appointmentRepository;
+
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
     private ServiceRepository serviceRepository;
 
     @Autowired
     private StaffRepository staffRepository;
     
+    // Appointment Management
+    @GetMapping("/appointments")
+    public List<Appointment> getAllAppointments() {
+        return appointmentRepository.findAll();
+    }
+
+    @PutMapping("/appointments/{id}/status")
+    public ResponseEntity<?> updateAppointmentStatus(@PathVariable Long id, @RequestParam AppointmentStatus status) {
+        Appointment appointment = appointmentRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Appointment not found"));
+        appointment.setStatus(status);
+        return ResponseEntity.ok(appointmentRepository.save(appointment));
+    }
+
+    @GetMapping("/stats")
+    public Map<String, Object> getDashboardStats() {
+        Map<String, Object> stats = new HashMap<>();
+        List<Appointment> allAppointments = appointmentRepository.findAll();
+        
+        stats.put("totalBookings", allAppointments.size());
+        stats.put("totalCustomers", userRepository.count());
+        
+        double revenue = allAppointments.stream()
+                .filter(a -> a.getStatus() == AppointmentStatus.COMPLETED)
+                .mapToDouble(a -> a.getService().getPrice())
+                .sum();
+        stats.put("totalRevenue", revenue);
+        
+        return stats;
+    }
+
     // Service Management
     @GetMapping("/services")
     public List<Service> getAllServices() {
