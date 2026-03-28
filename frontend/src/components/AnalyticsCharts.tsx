@@ -23,17 +23,28 @@ ChartJS.register(
 );
 
 export default function AnalyticsCharts({ stats }: { stats: any }) {
-  const labels = Object.keys(stats.bookingsTrend || {}).sort();
+  const bookingsTrend = stats?.bookingsTrend || {};
+  const revenueTrend = stats?.revenueTrend || {};
+  const labels = Object.keys(bookingsTrend).sort();
+
+  if (labels.length === 0) {
+    return (
+      <div className="bg-gray-50 rounded-3xl p-12 text-center border-2 border-dashed border-gray-200">
+        <p className="text-gray-400 font-medium">No trend data available for the last 7 days.</p>
+      </div>
+    );
+  }
   
   const bookingData = {
     labels,
     datasets: [
       {
         label: 'Bookings',
-        data: labels.map(label => stats.bookingsTrend[label]),
+        data: labels.map(label => bookingsTrend[label] || 0),
         borderColor: 'rgb(147, 51, 234)',
         backgroundColor: 'rgba(147, 51, 234, 0.5)',
         tension: 0.4,
+        fill: true
       },
     ],
   };
@@ -43,21 +54,35 @@ export default function AnalyticsCharts({ stats }: { stats: any }) {
     datasets: [
       {
         label: 'Revenue ($)',
-        data: labels.map(label => stats.revenueTrend[label] || 0),
+        data: labels.map(label => revenueTrend[label] || 0),
         borderColor: 'rgb(22, 163, 74)',
         backgroundColor: 'rgba(22, 163, 74, 0.5)',
         tension: 0.4,
+        fill: true
       },
     ],
   };
 
   const options = {
     responsive: true,
+    maintainAspectRatio: false,
     plugins: {
-      legend: { position: 'top' as const },
+      legend: { display: false },
+      tooltip: {
+        backgroundColor: '#1f2937',
+        padding: 12,
+        cornerRadius: 12,
+        titleFont: { size: 14, weight: 'bold' },
+      }
     },
     scales: {
-      y: { beginAtZero: true }
+      y: { 
+        beginAtZero: true,
+        grid: { color: '#f3f4f6' }
+      },
+      x: {
+        grid: { display: false }
+      }
     }
   };
 
