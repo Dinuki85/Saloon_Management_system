@@ -4,6 +4,7 @@ import com.saloon.model.Service;
 import com.saloon.repository.ServiceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,11 +22,13 @@ public class ServiceController {
     }
 
     @PostMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public Service createService(@RequestBody Service service) {
         return serviceRepository.save(service);
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Service> updateService(@PathVariable Long id, @RequestBody Service serviceDetails) {
         Service service = serviceRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Service not found with id: " + id));
@@ -40,6 +43,7 @@ public class ServiceController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> deleteService(@PathVariable Long id) {
         Service service = serviceRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Service not found with id: " + id));

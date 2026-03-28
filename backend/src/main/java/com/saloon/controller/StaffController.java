@@ -4,6 +4,7 @@ import com.saloon.model.Staff;
 import com.saloon.repository.StaffRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,11 +22,13 @@ public class StaffController {
     }
 
     @PostMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public Staff createStaff(@RequestBody Staff staff) {
         return staffRepository.save(staff);
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Staff> updateStaff(@PathVariable Long id, @RequestBody Staff staffDetails) {
         Staff staff = staffRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Staff not found with id: " + id));
@@ -39,6 +42,7 @@ public class StaffController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> deleteStaff(@PathVariable Long id) {
         Staff staff = staffRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Staff not found with id: " + id));
