@@ -101,11 +101,12 @@ export default function AdminAppointmentsPage() {
                         onChange={(e) => handleStatusUpdate(appt.id, e.target.value)}
                         className="bg-gray-50 border border-gray-200 rounded-lg px-4 py-2 text-xs font-bold focus:ring-2 focus:ring-purple-500 outline-none cursor-pointer transition-all hover:bg-white"
                       >
-                        <option value="BOOKED">Pending Approval</option>
-                        <option value="ACCEPTED">Accept Appointment</option>
-                        <option value="REJECTED">Reject Appointment</option>
-                        <option value="COMPLETED">Mark as Done</option>
-                        <option value="CANCELLED">Cancelled</option>
+                        <option value="PAYMENT_PENDING">💰 Payment Pending</option>
+                        <option value="BOOKED">📅 Booked (Pending Approval)</option>
+                        <option value="ACCEPTED">✅ Accept Appointment</option>
+                        <option value="REJECTED">❌ Reject Appointment</option>
+                        <option value="COMPLETED">✨ Mark as Done</option>
+                        <option value="CANCELLED">🚫 Cancelled</option>
                       </select>
                     </td>
                   </tr>
