@@ -1,0 +1,41 @@
+package com.saloon.model;
+
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import java.time.LocalDate;
+
+@Entity
+@Table(name = "appointments")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class Appointment {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "service_id", nullable = false)
+    private Service service;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "staff_id", nullable = false)
+    private Staff staff;
+
+    @Column(nullable = false)
+    private LocalDate date;
+
+    @Column(nullable = false)
+    private String timeSlot;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private AppointmentStatus status = AppointmentStatus.BOOKED;
+}
