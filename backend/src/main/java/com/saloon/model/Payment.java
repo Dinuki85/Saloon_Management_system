@@ -18,7 +18,6 @@ public class Payment extends BaseEntity {
     @Column(nullable = false)
     private PaymentStatus status;
 
-    @Column(nullable = false)
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "appointment_id", nullable = false)
     private Appointment appointment;
