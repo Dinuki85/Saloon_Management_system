@@ -29,10 +29,10 @@ public class AppointmentController {
     private UserRepository userRepository;
 
     @Autowired
-    private com.saloon.service.TreatmentService treatmentService;
+    private TreatmentService treatmentService;
 
     @Autowired
-    private com.saloon.service.StaffService staffService;
+    private StaffService staffService;
 
     @GetMapping("/available-slots")
     public List<String> getAvailableSlots(@RequestParam String date, @RequestParam Long staffId) {
@@ -48,7 +48,7 @@ public class AppointmentController {
     }
 
     @PostMapping
-    public ResponseEntity<?> bookAppointment(@RequestBody com.saloon.dto.AppointmentRequest request) {
+    public ResponseEntity<?> bookAppointment(@RequestBody AppointmentRequest request) {
         if (request.getUserId() == null || request.getServiceId() == null || request.getStaffId() == null) {
             return ResponseEntity.badRequest().body("User ID, Service ID, and Staff ID are required.");
         }
@@ -77,7 +77,7 @@ public class AppointmentController {
 
         User user = userRepository.findById(request.getUserId())
                 .orElseThrow(() -> new RuntimeException("User not found"));
-        com.saloon.model.Service service = treatmentService.getServiceById(request.getServiceId());
+        Service service = treatmentService.getServiceById(request.getServiceId());
         Staff staff = staffService.getStaffById(request.getStaffId());
 
         Appointment appointment = new Appointment();
