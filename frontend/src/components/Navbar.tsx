@@ -108,7 +108,7 @@ const Navbar = () => {
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
-            className="md:hidden bg-white/95 backdrop-blur-xl border-b border-gray-100 overflow-hidden"
+            className="md:hidden sticky top-16 w-full z-50 bg-white border-b border-gray-100 overflow-hidden"
           >
             <div className="px-4 pt-4 pb-8 space-y-3">
               <Link href="/" onClick={() => setIsMenuOpen(false)} className="block px-4 py-3 rounded-2xl text-base font-bold text-gray-700 hover:text-purple-600 hover:bg-purple-50 transition-all">Home</Link>
