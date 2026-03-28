@@ -65,11 +65,11 @@ public class AdminController {
         stats.put("totalRevenue", revenue);
         
         // Trend data (Last 7 days)
-        Map<String, Long> bookingsTrend = allAppointments.stream()
+        Map<?, Long> bookingsTrend = allAppointments.stream()
                 .collect(Collectors.groupingBy(Appointment::getDate, Collectors.counting()));
         stats.put("bookingsTrend", bookingsTrend);
 
-        Map<String, Double> revenueTrend = allAppointments.stream()
+        Map<?, Double> revenueTrend = allAppointments.stream()
                 .filter(a -> a.getStatus() == AppointmentStatus.COMPLETED)
                 .collect(Collectors.groupingBy(Appointment::getDate, 
                         Collectors.summingDouble(a -> a.getService().getPrice())));
