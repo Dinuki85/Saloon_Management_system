@@ -1,6 +1,7 @@
 package com.saloon.controller;
 
 import com.saloon.dto.AppointmentRequest;
+import com.saloon.dto.AppointmentRequest;
 import com.saloon.model.Appointment;
 import com.saloon.model.AppointmentStatus;
 import com.saloon.model.Service;
