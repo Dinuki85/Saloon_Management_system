@@ -40,6 +40,11 @@ const Navbar = () => {
                 Dashboard
               </Link>
             )}
+            {user && user.role === 'ROLE_ADMIN' && (
+              <Link href="/admin" className="text-purple-600 font-bold inline-flex items-center px-1 pt-1 border-b-2 border-transparent hover:border-purple-600 transition-colors">
+                Admin Panel
+              </Link>
+            )}
           </div>
           <div className="flex items-center space-x-4">
             {user ? (

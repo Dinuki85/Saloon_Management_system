@@ -1,21 +1,16 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { getDashboardStats } from '@/utils/api';
+import { getAdminStats } from '@/utils/api';
 
 export default function AdminDashboardPage() {
   const [stats, setStats] = useState<any>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchStats = async () => {
+    const fetchStatsData = async () => {
       try {
-        const response = await fetch('http://localhost:8080/api/admin/stats', {
-          headers: {
-            'Authorization': `Bearer ${JSON.parse(localStorage.getItem('user') || '{}').token}`
-          }
-        });
-        const data = await response.json();
+        const data = await getAdminStats();
         setStats(data);
       } catch (err) {
         console.error('Failed to fetch stats');
@@ -23,7 +18,7 @@ export default function AdminDashboardPage() {
         setLoading(false);
       }
     };
-    fetchStats();
+    fetchStatsData();
   }, []);
 
   const statCards = [
