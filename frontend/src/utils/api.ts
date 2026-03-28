@@ -87,6 +87,40 @@ export const cancelAppointment = async (appointmentId: number) => {
   return response;
 };
 
+export const getAdminStats = async () => {
+  const user = getCurrentUser();
+  const response = await fetch(`${API_BASE_URL}/admin/stats`, {
+    headers: {
+      'Authorization': `Bearer ${user?.token}`
+    }
+  });
+  if (!response.ok) throw new Error('Failed to fetch admin stats');
+  return await response.json();
+};
+
+export const updateAppointmentStatus = async (id: number, status: string) => {
+  const user = getCurrentUser();
+  const response = await fetch(`${API_BASE_URL}/admin/appointments/${id}/status?status=${status}`, {
+    method: 'PUT',
+    headers: {
+      'Authorization': `Bearer ${user?.token}`
+    }
+  });
+  if (!response.ok) throw new Error('Failed to update status');
+  return await response.json();
+};
+
+export const getAdminAppointments = async () => {
+  const user = getCurrentUser();
+  const response = await fetch(`${API_BASE_URL}/admin/appointments`, {
+    headers: {
+      'Authorization': `Bearer ${user?.token}`
+    }
+  });
+  if (!response.ok) throw new Error('Failed to fetch admin appointments');
+  return await response.json();
+};
+
 export const logout = () => {
   localStorage.removeItem('user');
 };
