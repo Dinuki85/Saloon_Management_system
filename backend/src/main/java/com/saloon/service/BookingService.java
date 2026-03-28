@@ -1,7 +1,6 @@
 package com.saloon.service;
 
 import com.saloon.model.Appointment;
-import com.saloon.model.AppointmentStatus;
 import com.saloon.model.User;
 import com.saloon.repository.AppointmentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
