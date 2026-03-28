@@ -3,5 +3,7 @@ package com.saloon.model;
 public enum AppointmentStatus {
     BOOKED,
     CANCELLED,
-    COMPLETED
+    COMPLETED,
+    PAYMENT_PENDING,
+    PAYMENT_FAILED
 }

@@ -77,7 +77,7 @@ public class AppointmentController {
         appointment.setStaff(staff);
         appointment.setDate(request.getDate());
         appointment.setTimeSlot(request.getTimeSlot());
-        appointment.setStatus(AppointmentStatus.BOOKED);
+        appointment.setStatus(AppointmentStatus.PAYMENT_PENDING);
 
         return ResponseEntity.ok(appointmentRepository.save(appointment));
     }
