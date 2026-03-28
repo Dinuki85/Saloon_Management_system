@@ -5,7 +5,9 @@ import lombok.Data;
 
 @Data
 @Entity
-@Table(name = "payments")
+@Table(name = "payments", indexes = {
+    @Index(name = "idx_payment_appointment", columnList = "appointment_id")
+})
 public class Payment extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
