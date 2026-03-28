@@ -42,6 +42,7 @@ public class Appointment extends BaseEntity {
     @Column(nullable = false)
     private AppointmentStatus status = AppointmentStatus.BOOKED;
 
+    // Bidirectional mapping
     @OneToOne(mappedBy = "appointment", cascade = CascadeType.ALL, orphanRemoval = true)
     private Payment payment;
 }
