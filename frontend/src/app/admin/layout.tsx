@@ -32,9 +32,9 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   if (!user) return null;
 
   return (
-    <div className="min-h-screen bg-gray-50 flex">
+    <div className="min-h-screen bg-gray-50 flex items-stretch">
       {/* Sidebar */}
-      <aside className={`bg-white border-r border-gray-200 transition-all duration-300 z-50 ${isSidebarOpen ? 'w-64' : 'w-20'} flex flex-col`}>
+      <aside className={`bg-white border-r border-gray-200 transition-all duration-300 z-40 ${isSidebarOpen ? 'w-64' : 'w-20'} flex flex-col sticky top-16 h-[calc(100vh-64px)] overflow-y-auto`}>
         <div className="h-20 flex items-center px-6 border-b border-gray-100">
           <Link href="/admin" className="flex items-center gap-3">
             <span className="text-xl font-black text-gray-900 tracking-tighter">

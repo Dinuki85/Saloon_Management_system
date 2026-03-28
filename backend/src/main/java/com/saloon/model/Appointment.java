@@ -43,7 +43,7 @@ public class Appointment extends BaseEntity {
     private String timeSlot;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
+    @Column(nullable = false, length = 50)
     private AppointmentStatus status = AppointmentStatus.BOOKED;
 
     // Bidirectional mapping
