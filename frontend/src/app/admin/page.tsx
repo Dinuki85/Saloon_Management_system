@@ -2,7 +2,11 @@
 
 import { useState, useEffect } from 'react';
 import { getAdminStats } from '@/utils/api';
-import AnalyticsCharts from '@/components/AnalyticsCharts';
+import dynamic from 'next/dynamic';
+const AnalyticsCharts = dynamic(() => import('@/components/AnalyticsCharts'), {
+  ssr: false,
+  loading: () => <div className="h-96 bg-gray-50 rounded-3xl animate-pulse"></div>
+});
 
 export default function AdminDashboardPage() {
   const [stats, setStats] = useState<any>(null);
