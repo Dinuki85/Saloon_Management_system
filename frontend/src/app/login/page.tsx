@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import { login } from '@/utils/api';
 import { useRouter, useSearchParams } from 'next/navigation';
+import { useAuth } from '@/hooks/useAuth';
 
 export default function LoginPage() {
   const [formData, setFormData] = useState({
@@ -15,6 +16,7 @@ export default function LoginPage() {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
   const searchParams = useSearchParams();
+  const { refreshUser } = useAuth();
 
   useEffect(() => {
     if (searchParams.get('registered')) {
@@ -33,8 +35,9 @@ export default function LoginPage() {
     setLoading(true);
 
         try {
-      await login(formData);
-      const redirect = searchParams.get('redirect') || '/';
+      const user = await login(formData);
+      refreshUser(); // Trigger navbar update
+      const redirect = searchParams.get('redirect') || (user.roles?.includes('ROLE_ADMIN') ? '/admin' : '/');
       router.push(redirect);
     } catch (err: any) {
       setError(err.message || 'Login failed. Please check your credentials.');

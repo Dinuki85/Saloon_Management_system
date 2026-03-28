@@ -8,8 +8,14 @@ export function useAuth() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    setUser(getCurrentUser());
-    setLoading(false);
+    const checkUser = () => {
+      setUser(getCurrentUser());
+      setLoading(false);
+    };
+
+    checkUser();
+    window.addEventListener('storage', checkUser);
+    return () => window.removeEventListener('storage', checkUser);
   }, []);
 
   const logout = () => {

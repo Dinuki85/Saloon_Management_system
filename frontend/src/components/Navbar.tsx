@@ -1,15 +1,15 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '@/hooks/useAuth';
+import { motion, AnimatePresence } from 'framer-motion';
 
 const Navbar = () => {
   const { user, logout } = useAuth();
   const router = useRouter();
-  const [isMenuOpen, setIsMenuOpen] = React.useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const handleLogout = () => {
     logout();
@@ -56,9 +56,15 @@ const Navbar = () => {
 
           <div className="flex items-center space-x-4">
             {user ? (
-              <div className="hidden md:flex items-center space-x-4">
-                <span className="text-sm font-medium text-gray-500">Hi, {user.firstName}</span>
-                <button onClick={handleLogout} className="text-gray-600 hover:text-red-500 font-bold transition-all">
+              <div className="hidden md:flex items-center space-x-6">
+                <div className="flex flex-col items-end leading-none">
+                   <p className="text-[10px] font-black uppercase tracking-widest text-purple-600 mb-1">Authenticated</p>
+                   <span className="text-sm font-black text-gray-900">👋 Hi, {user.firstName}</span>
+                </div>
+                <button 
+                  onClick={handleLogout} 
+                  className="bg-red-50 text-red-600 px-4 py-2 rounded-xl text-xs font-black uppercase tracking-widest hover:bg-red-100 transition-all active:scale-95"
+                >
                   Logout
                 </button>
               </div>
@@ -108,6 +114,13 @@ const Navbar = () => {
               <Link href="/" onClick={() => setIsMenuOpen(false)} className="block px-4 py-3 rounded-2xl text-base font-bold text-gray-700 hover:text-purple-600 hover:bg-purple-50 transition-all">Home</Link>
               <Link href="/services" onClick={() => setIsMenuOpen(false)} className="block px-4 py-3 rounded-2xl text-base font-bold text-gray-700 hover:text-purple-600 hover:bg-purple-50 transition-all">Services</Link>
               <Link href="/staff" onClick={() => setIsMenuOpen(false)} className="block px-4 py-3 rounded-2xl text-base font-bold text-gray-700 hover:text-purple-600 hover:bg-purple-50 transition-all">Our Stylists</Link>
+              
+              {user && (
+                <div className="px-4 py-4 bg-purple-50 rounded-2xl border border-purple-100 mb-3">
+                   <p className="text-[10px] font-black uppercase tracking-widest text-purple-600 mb-1">Welcome back</p>
+                   <p className="text-lg font-black text-gray-900 italic">👋 Hi, {user.firstName}!</p>
+                </div>
+              )}
               
               {user && (
                 <Link href="/dashboard" onClick={() => setIsMenuOpen(false)} className="block px-4 py-3 rounded-2xl text-base font-bold text-gray-700 hover:text-purple-600 hover:bg-purple-50 transition-all">Dashboard</Link>
