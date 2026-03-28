@@ -1,4 +1,14 @@
+package com.saloon.controller;
+
+import com.saloon.dto.AppointmentRequest;
+import com.saloon.model.*;
+import com.saloon.repository.*;
 import com.saloon.util.TimeSlotUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 import java.util.stream.Collectors;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
@@ -32,6 +42,17 @@ public class AppointmentController {
 
     @PostMapping
     public ResponseEntity<?> bookAppointment(@RequestBody AppointmentRequest request) {
+        // Double booking prevention
+        boolean isAlreadyBooked = appointmentRepository.findAll().stream()
+                .anyMatch(a -> a.getDate().equals(request.getDate()) 
+                            && a.getStaff().getId().equals(request.getStaffId()) 
+                            && a.getTimeSlot().equals(request.getTimeSlot())
+                            && a.getStatus() != AppointmentStatus.CANCELLED);
+        
+        if (isAlreadyBooked) {
+            return ResponseEntity.badRequest().body("This time slot is already booked for the selected stylist.");
+        }
+
         User user = userRepository.findById(request.getUserId())
                 .orElseThrow(() -> new RuntimeException("User not found"));
         Service service = serviceRepository.findById(request.getServiceId())
