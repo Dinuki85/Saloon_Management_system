@@ -28,4 +28,7 @@ public class Service {
 
     @Column(nullable = false)
     private Integer duration; // in minutes
+
+    @Column(nullable = false)
+    private boolean deleted = false;
 }

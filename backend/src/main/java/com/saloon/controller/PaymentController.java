@@ -1,6 +1,9 @@
 package com.saloon.controller;
 
-import com.saloon.model.*;
+import com.saloon.model.Appointment;
+import com.saloon.model.AppointmentStatus;
+import com.saloon.model.Payment;
+import com.saloon.model.PaymentStatus;
 import com.saloon.repository.AppointmentRepository;
 import com.saloon.repository.PaymentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +32,7 @@ public class PaymentController {
                 .orElseThrow(() -> new RuntimeException("Appointment not found"));
 
         Payment payment = new Payment();
-        payment.setAppointmentId(appointmentId);
+        payment.setAppointment(appointment);
         payment.setAmount(appointment.getService().getPrice());
 
         if (simulateSuccess) {

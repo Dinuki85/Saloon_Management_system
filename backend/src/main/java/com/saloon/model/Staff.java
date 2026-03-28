@@ -23,4 +23,7 @@ public class Staff {
 
     @Column(columnDefinition = "TEXT")
     private String availability;
+
+    @Column(nullable = false)
+    private boolean deleted = false;
 }
