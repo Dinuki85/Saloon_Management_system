@@ -56,14 +56,14 @@ const Navbar = () => {
 
           <div className="flex items-center space-x-4">
             {user ? (
-              <div className="hidden md:flex items-center space-x-6">
-                <div className="flex flex-col items-end leading-none">
-                   <p className="text-[10px] font-black uppercase tracking-widest text-purple-600 mb-1">Authenticated</p>
-                   <span className="text-sm font-black text-gray-900">👋 Hi, {user.firstName}</span>
+              <div className="hidden md:flex items-center gap-4 pl-4 border-l border-gray-100">
+                <div className="flex flex-col items-end mr-2">
+                  <span className="text-xs font-black text-gray-900 leading-none">👋 Hi, {user.firstName}</span>
+                  {user.roles?.includes('ROLE_ADMIN') && <span className="text-[9px] font-black text-purple-600 uppercase tracking-tighter mt-1">Administrator</span>}
                 </div>
                 <button 
                   onClick={handleLogout} 
-                  className="bg-red-50 text-red-600 px-4 py-2 rounded-xl text-xs font-black uppercase tracking-widest hover:bg-red-100 transition-all active:scale-95"
+                  className="bg-red-50 text-red-500 hover:bg-red-100 px-3 py-1.5 rounded-full font-black text-[10px] uppercase tracking-widest transition-all"
                 >
                   Logout
                 </button>

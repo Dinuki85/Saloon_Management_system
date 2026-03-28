@@ -109,7 +109,7 @@ export default function DashboardPage() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-100">
-                {appointments.map((appt) => (
+                {appointments.filter(a => ['BOOKED', 'ACCEPTED'].includes(a.status)).map((appt) => (
                   <tr key={appt.id} className="hover:bg-gray-50/50 transition-colors">
                     <td className="px-8 py-6">
                       <div className="font-bold text-gray-900">{appt.service.name}</div>
@@ -124,7 +124,6 @@ export default function DashboardPage() {
                       <span className={`px-3 py-1 rounded-full text-xs font-black uppercase tracking-tighter ${
                         appt.status === 'BOOKED' ? 'bg-blue-100 text-blue-600' :
                         appt.status === 'ACCEPTED' ? 'bg-green-100 text-green-600' :
-                        appt.status === 'CANCELLED' ? 'bg-red-100 text-red-600' :
                         'bg-gray-100 text-gray-600'
                       }`}>
                         {appt.status}
@@ -143,18 +142,48 @@ export default function DashboardPage() {
             </table>
           </div>
 
+          {/* History Section */}
+          <div className="p-8 border-t border-gray-100 bg-gray-50/30">
+            <h2 className="text-lg font-bold text-gray-700">Appointment History</h2>
+          </div>
+          <div className="hidden md:block overflow-x-auto border-t border-gray-100">
+            <table className="w-full text-left">
+              <tbody className="divide-y divide-gray-100">
+                {appointments.filter(a => !['BOOKED', 'ACCEPTED'].includes(a.status)).map((appt) => (
+                  <tr key={appt.id} className="bg-white/50 opacity-60">
+                    <td className="px-8 py-4">
+                      <div className="font-bold text-gray-600">{appt.service.name}</div>
+                    </td>
+                    <td className="px-8 py-4 text-gray-500 text-sm">{appt.staff.name}</td>
+                    <td className="px-8 py-4 text-sm text-gray-500">{appt.date}</td>
+                    <td className="px-8 py-4">
+                      <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold uppercase ${
+                        appt.status === 'COMPLETED' ? 'text-green-600 bg-green-50' : 
+                        appt.status === 'REJECTED' ? 'text-red-600 bg-red-50' :
+                        'text-gray-400 bg-gray-50'
+                      }`}>
+                        {appt.status}
+                      </span>
+                    </td>
+                    <td className="px-8 py-4"></td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
           {/* Mobile Cards */}
           <div className="md:hidden divide-y divide-gray-100">
-            {appointments.map((appt) => (
+            <div className="px-6 py-4 bg-gray-50/50 font-bold text-xs uppercase text-gray-400 tracking-widest">Active & Upcoming</div>
+            {appointments.filter(a => ['BOOKED', 'ACCEPTED'].includes(a.status)).map((appt) => (
               <div key={appt.id} className="p-6 space-y-4">
                 <div className="flex justify-between items-start">
                   <div>
                     <h3 className="font-black text-gray-900 text-lg uppercase tracking-tight">{appt.service.name}</h3>
                     <p className="text-sm text-gray-500">with {appt.staff.name}</p>
                   </div>
-                  <span className={`px-3 py-1 rounded-full text-xs font-bold ${
+                  <span className={`px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest ${
                     appt.status === 'BOOKED' ? 'bg-blue-100 text-blue-600' :
-                    appt.status === 'CANCELLED' ? 'bg-red-100 text-red-600' :
                     'bg-green-100 text-green-600'
                   }`}>
                     {appt.status}
@@ -176,6 +205,17 @@ export default function DashboardPage() {
                     Cancel Appointment
                   </button>
                 )}
+              </div>
+            ))}
+            
+            <div className="px-6 py-4 bg-gray-50/50 font-bold text-xs uppercase text-gray-400 tracking-widest border-t border-gray-100">History</div>
+            {appointments.filter(a => !['BOOKED', 'ACCEPTED'].includes(a.status)).map((appt) => (
+              <div key={appt.id} className="p-6 opacity-60 flex justify-between items-center text-sm">
+                <div>
+                  <div className="font-bold text-gray-700">{appt.service.name}</div>
+                  <div className="text-xs text-gray-500">{appt.date}</div>
+                </div>
+                <span className="text-[10px] font-bold uppercase tracking-widest">{appt.status}</span>
               </div>
             ))}
           </div>

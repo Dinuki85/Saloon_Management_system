@@ -85,8 +85,10 @@ export default function AdminAppointmentsPage() {
                     <td className="px-8 py-6">
                       <span className={`px-3 py-1 rounded-full text-xs font-black uppercase tracking-tighter ${
                         appt.status === 'BOOKED' ? 'bg-blue-100 text-blue-600' :
-                        appt.status === 'ACCEPTED' ? 'bg-green-100 text-green-600' :
-                        appt.status === 'CANCELLED' ? 'bg-red-100 text-red-600' :
+                        appt.status === 'ACCEPTED' ? 'bg-indigo-100 text-indigo-600' :
+                        appt.status === 'COMPLETED' ? 'bg-green-100 text-green-600' :
+                        appt.status === 'REJECTED' ? 'bg-red-100 text-red-600' :
+                        appt.status === 'CANCELLED' ? 'bg-gray-100 text-gray-400 italic' :
                         'bg-gray-100 text-gray-600'
                       }`}>
                         {appt.status}
@@ -97,17 +99,25 @@ export default function AdminAppointmentsPage() {
                         <>
                           <button 
                             onClick={() => handleStatusUpdate(appt.id, 'ACCEPTED')}
-                            className="bg-green-600 text-white px-4 py-2 rounded-lg text-xs font-bold hover:bg-green-700 transition-all"
+                            className="bg-green-600 text-white px-4 py-2 rounded-lg text-xs font-bold hover:bg-green-700 transition-all shadow-lg shadow-green-500/20"
                           >
                             Accept
                           </button>
                           <button 
-                            onClick={() => handleStatusUpdate(appt.id, 'CANCELLED')}
-                            className="text-red-500 hover:text-red-700 text-xs font-bold"
+                            onClick={() => handleStatusUpdate(appt.id, 'REJECTED')}
+                            className="bg-red-50 text-red-500 px-4 py-2 rounded-lg text-xs font-bold hover:bg-red-100 transition-all ml-2"
                           >
                             Reject
                           </button>
                         </>
+                      )}
+                      {appt.status === 'ACCEPTED' && (
+                        <button 
+                          onClick={() => handleStatusUpdate(appt.id, 'COMPLETED')}
+                          className="bg-purple-600 text-white px-4 py-2 rounded-lg text-xs font-bold hover:bg-purple-700 transition-all shadow-lg shadow-purple-500/20"
+                        >
+                          Mark Done
+                        </button>
                       )}
                     </td>
                   </tr>

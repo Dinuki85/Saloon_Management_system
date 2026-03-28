@@ -103,7 +103,8 @@ export const getAllAppointments = async () => {
     headers: getAuthHeader(),
   });
   if (!res.ok) throw new Error('Failed to fetch all appointments');
-  return res.json();
+  const data = await res.json();
+  return data.content || data; // Handle both Page and List
 };
 
 export const updateAppointmentStatus = async (id: number, status: string) => {

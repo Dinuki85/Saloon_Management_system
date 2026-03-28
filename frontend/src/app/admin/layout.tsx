@@ -70,24 +70,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       </aside>
 
       {/* Main Content */}
-      <div className="flex-1 flex flex-col">
-        {/* Top Nav */}
-        <header className="h-20 bg-white border-b border-gray-100 flex items-center justify-between px-8 sticky top-0 z-40 backdrop-blur-md bg-white/80">
-          <button onClick={() => setSidebarOpen(!isSidebarOpen)} className="p-2 hover:bg-gray-100 rounded-xl transition-all">
-            {isSidebarOpen ? '⬅️' : '➡️'}
-          </button>
-          
-          <div className="flex items-center gap-4">
-            <div className="text-right">
-              <p className="text-sm font-bold text-gray-900">{user.firstName} {user.lastName}</p>
-              <p className="text-xs text-purple-600 font-bold uppercase tracking-wider">Administrator</p>
-            </div>
-            <div className="h-10 w-10 bg-purple-100 rounded-xl flex items-center justify-center text-purple-600 font-bold">
-              {user.firstName[0]}
-            </div>
-          </div>
-        </header>
-
+      <div className="flex-1 flex flex-col pt-16 md:pt-0"> {/* Add padding for global navbar on mobile if needed */}
         <main className="flex-1 p-8">
           {children}
         </main>
