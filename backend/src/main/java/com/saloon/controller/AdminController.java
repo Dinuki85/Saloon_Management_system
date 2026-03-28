@@ -18,6 +18,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 @RequestMapping("/api/admin")
@@ -36,10 +39,10 @@ public class AdminController {
     @Autowired
     private StaffRepository staffRepository;
     
-    // Appointment Management
+    // Appointment Management (Paginated)
     @GetMapping("/appointments")
-    public List<Appointment> getAllAppointments() {
-        return appointmentRepository.findAll();
+    public Page<Appointment> getAllAppointments(Pageable pageable) {
+        return appointmentRepository.findAll(pageable);
     }
 
     @PutMapping("/appointments/{id}/status")

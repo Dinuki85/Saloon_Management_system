@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { motion } from 'framer-motion';
 
 export default function Home() {
   return (
@@ -10,7 +11,12 @@ export default function Home() {
           <div className="w-full h-full bg-[url('https://images.unsplash.com/photo-1560066984-138dadb4c035?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80')] bg-cover bg-center" />
         </div>
         
-        <div className="relative z-20 text-center px-4 max-w-4xl mx-auto">
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+          className="relative z-20 text-center px-4 max-w-4xl mx-auto"
+        >
           <h1 className="text-4xl md:text-6xl font-extrabold text-white mb-6 tracking-tight">
             Reveal Your <span className="text-purple-400 italic">Natural Radiance</span>
           </h1>
@@ -35,12 +41,17 @@ export default function Home() {
           <p className="text-gray-500 max-w-2xl mx-auto mb-16 text-lg">Indulge in our curated selection of treatments designed to rejuvenate and inspire.</p>
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
-            {[
-              { id: 1, name: "Hair Styling", desc: "Expert cuts, coloring and styling for any occasion.", price: "from $45" },
+            {[{ id: 1, name: "Hair Styling", desc: "Expert cuts, coloring and styling for any occasion.", price: "from $45" },
               { id: 2, name: "Skin Care", desc: "Rejuvenating facials and treatments for healthy skin.", price: "from $60" },
-              { id: 3, name: "Nail Care", desc: "Manicures and pedicures with a touch of luxury.", price: "from $35" }
-            ].map((service) => (
-              <div key={service.id} className="group p-8 bg-gray-50 rounded-3xl border border-gray-100 hover:border-purple-200 hover:shadow-2xl hover:shadow-purple-500/5 transition-all duration-300">
+              { id: 3, name: "Nail Care", desc: "Manicures and pedicures with a touch of luxury.", price: "from $35" }].map((service, index) => (
+              <motion.div 
+                key={service.id}
+                initial={{ opacity: 0, scale: 0.9 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true }}
+                transition={{ delay: index * 0.1 }}
+                className="group p-8 bg-gray-50 rounded-3xl border border-gray-100 hover:border-purple-200 hover:shadow-2xl hover:shadow-purple-500/5 transition-all duration-300"
+              >
                 <div className="w-16 h-16 bg-purple-100/50 rounded-2xl flex items-center justify-center mb-6 border border-purple-200 group-hover:bg-purple-600 group-hover:text-white transition-colors duration-300">
                   <span className="text-2xl font-bold">0{service.id}</span>
                 </div>
