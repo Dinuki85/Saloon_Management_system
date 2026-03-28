@@ -44,6 +44,8 @@ public class BookingService {
         return appointmentRepository.existsByStaffIdAndDateAndTimeSlotAndStatusNotIn(
                 staffId, date, timeSlot, java.util.Arrays.asList(
                         com.saloon.model.AppointmentStatus.CANCELLED, 
+                        com.saloon.model.AppointmentStatus.REJECTED,
+                        com.saloon.model.AppointmentStatus.COMPLETED,
                         com.saloon.model.AppointmentStatus.PAYMENT_FAILED));
     }
 
@@ -51,6 +53,8 @@ public class BookingService {
         return appointmentRepository.existsByUserIdAndDateAndTimeSlotAndStatusNotIn(
                 userId, date, timeSlot, java.util.Arrays.asList(
                         com.saloon.model.AppointmentStatus.CANCELLED, 
+                        com.saloon.model.AppointmentStatus.REJECTED,
+                        com.saloon.model.AppointmentStatus.COMPLETED,
                         com.saloon.model.AppointmentStatus.PAYMENT_FAILED));
     }
 }

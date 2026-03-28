@@ -9,7 +9,7 @@ export default function Home() {
   return (
     <div className="flex flex-col">
       {/* Hero Section */}
-      <section className="relative h-[85vh] flex items-center justify-center overflow-hidden bg-gray-900">
+      <section className="relative h-[90vh] flex items-center justify-center overflow-hidden bg-gray-900 -mt-16">
         <div className="absolute inset-0 z-0">
           <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-black/40 to-gray-900/90 z-10" />
           <div className="w-full h-full bg-[url('https://images.unsplash.com/photo-1560066984-138dadb4c035?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80')] bg-cover bg-[center_top] md:bg-center" />

@@ -45,7 +45,7 @@ export default function AdminAppointmentsPage() {
   if (loading) return <div className="p-20 text-center animate-pulse">Loading appointments...</div>;
 
   return (
-    <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-gray-50 py-8 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto">
         <div className="flex justify-between items-center mb-10">
           <h1 className="text-3xl font-black text-gray-900 uppercase tracking-tighter">
@@ -85,8 +85,8 @@ export default function AdminAppointmentsPage() {
                     <td className="px-8 py-6">
                       <span className={`px-3 py-1 rounded-full text-xs font-black uppercase tracking-tighter ${
                         appt.status === 'BOOKED' ? 'bg-blue-100 text-blue-600' :
-                        appt.status === 'ACCEPTED' ? 'bg-indigo-100 text-indigo-600' :
-                        appt.status === 'COMPLETED' ? 'bg-green-100 text-green-600' :
+                        appt.status === 'ACCEPTED' ? 'bg-green-100 text-green-600' :
+                        appt.status === 'COMPLETED' ? 'bg-indigo-100 text-indigo-600' :
                         appt.status === 'REJECTED' ? 'bg-red-100 text-red-600' :
                         appt.status === 'CANCELLED' ? 'bg-gray-100 text-gray-400 italic' :
                         'bg-gray-100 text-gray-600'
