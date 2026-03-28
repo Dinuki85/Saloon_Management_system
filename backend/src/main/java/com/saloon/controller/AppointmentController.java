@@ -1,13 +1,5 @@
-package com.saloon.controller;
-
-import com.saloon.dto.AppointmentRequest;
-import com.saloon.model.*;
-import com.saloon.repository.*;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
+import com.saloon.util.TimeSlotUtils;
+import java.util.stream.Collectors;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
@@ -24,6 +16,19 @@ public class AppointmentController {
 
     @Autowired
     private StaffRepository staffRepository;
+
+    @GetMapping("/available-slots")
+    public List<String> getAvailableSlots(@RequestParam String date, @RequestParam Long staffId) {
+        List<String> allSlots = TimeSlotUtils.generateTimeSlots();
+        List<String> bookedSlots = appointmentRepository.findAll().stream()
+                .filter(a -> a.getDate().equals(date) && a.getStaff().getId().equals(staffId) && a.getStatus() != AppointmentStatus.CANCELLED)
+                .map(Appointment::getTimeSlot)
+                .collect(Collectors.toList());
+
+        return allSlots.stream()
+                .filter(slot -> !bookedSlots.contains(slot))
+                .collect(Collectors.toList());
+    }
 
     @PostMapping
     public ResponseEntity<?> bookAppointment(@RequestBody AppointmentRequest request) {
