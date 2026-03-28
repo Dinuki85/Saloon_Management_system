@@ -11,21 +11,19 @@ import org.springframework.stereotype.Component;
 import java.security.Key;
 import java.util.Date;
 
-@Component
-public class JwtUtils {
-    private static final Logger logger = LoggerFactory.getLogger(JwtUtils.class);
+import java.util.stream.Collectors;
+import org.springframework.security.core.GrantedAuthority;
 
-    @Value("${saloon.app.jwtSecret}")
-    private String jwtSecret;
-
-    @Value("${saloon.app.jwtExpirationMs}")
-    private int jwtExpirationMs;
+// ... (Component annotations) ...
 
     public String generateJwtToken(Authentication authentication) {
         UserDetailsImpl userPrincipal = (UserDetailsImpl) authentication.getPrincipal();
 
         return Jwts.builder()
                 .setSubject((userPrincipal.getEmail()))
+                .claim("roles", userPrincipal.getAuthorities().stream()
+                        .map(GrantedAuthority::getAuthority)
+                        .collect(Collectors.toList()))
                 .setIssuedAt(new Date())
                 .setExpiration(new Date((new Date()).getTime() + jwtExpirationMs))
                 .signWith(key(), SignatureAlgorithm.HS256)
