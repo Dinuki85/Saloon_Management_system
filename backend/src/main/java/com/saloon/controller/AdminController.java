@@ -82,22 +82,26 @@ public class AdminController {
     }
 
     // Service Management
+    @org.springframework.cache.annotation.Cacheable("services")
     @GetMapping("/services")
     public List<Service> getAllServices() {
         return serviceRepository.findAll();
     }
 
+    @org.springframework.cache.annotation.CacheEvict(value = "services", allEntries = true)
     @PostMapping("/services")
     public Service createService(@RequestBody Service service) {
         return serviceRepository.save(service);
     }
     
     // Staff Management
+    @org.springframework.cache.annotation.Cacheable("staff")
     @GetMapping("/staff")
     public List<Staff> getAllStaff() {
         return staffRepository.findAll();
     }
 
+    @org.springframework.cache.annotation.CacheEvict(value = "staff", allEntries = true)
     @PostMapping("/staff")
     public Staff createStaff(@RequestBody Staff staff) {
         return staffRepository.save(staff);
