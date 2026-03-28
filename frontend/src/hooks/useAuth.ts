@@ -15,7 +15,11 @@ export function useAuth() {
 
     checkUser();
     window.addEventListener('storage', checkUser);
-    return () => window.removeEventListener('storage', checkUser);
+    window.addEventListener('auth-change', checkUser);
+    return () => {
+      window.removeEventListener('storage', checkUser);
+      window.removeEventListener('auth-change', checkUser);
+    };
   }, []);
 
   const logout = () => {

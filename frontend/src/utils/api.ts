@@ -27,6 +27,7 @@ export const login = async (credentials: any) => {
   }
   const data = await res.json();
   localStorage.setItem('user', JSON.stringify(data));
+  window.dispatchEvent(new Event('auth-change'));
   return data;
 };
 
@@ -45,6 +46,7 @@ export const register = async (userData: any) => {
 
 export const logout = () => {
   localStorage.removeItem('user');
+  window.dispatchEvent(new Event('auth-change'));
 };
 
 // Services
