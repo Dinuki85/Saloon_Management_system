@@ -42,6 +42,10 @@ public class AppointmentController {
 
     @PostMapping
     public ResponseEntity<?> bookAppointment(@RequestBody AppointmentRequest request) {
+        if (request.getUserId() == null || request.getServiceId() == null || request.getStaffId() == null) {
+            return ResponseEntity.badRequest().body("User ID, Service ID, and Staff ID are required.");
+        }
+
         // Double booking prevention
         boolean isAlreadyBooked = appointmentRepository.findAll().stream()
                 .anyMatch(a -> a.getDate().equals(request.getDate()) 
