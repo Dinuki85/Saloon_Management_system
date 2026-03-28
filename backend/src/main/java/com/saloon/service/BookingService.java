@@ -30,4 +30,13 @@ public class BookingService {
         return appointmentRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Appointment not found"));
     }
+
+    public void cancelAppointment(Long id, String userEmail) {
+        Appointment appointment = getAppointmentById(id);
+        if (!appointment.getUser().getEmail().equals(userEmail)) {
+            throw new RuntimeException("Unauthorized: You can only cancel your own appointments");
+        }
+        appointment.setStatus(com.saloon.model.AppointmentStatus.CANCELLED);
+        appointmentRepository.save(appointment);
+    }
 }
