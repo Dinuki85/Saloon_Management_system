@@ -14,6 +14,7 @@ import java.util.Set;
         @UniqueConstraint(columnNames = "email") 
     })
 @Data
+@EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
 @AllArgsConstructor
 public class User extends BaseEntity {

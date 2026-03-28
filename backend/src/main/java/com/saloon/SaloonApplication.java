@@ -14,13 +14,24 @@ public class SaloonApplication {
     }
 
     @Bean
-    CommandLineRunner init(RoleRepository roleRepository) {
+    CommandLineRunner init(RoleRepository roleRepository, com.saloon.repository.ServiceRepository serviceRepository, com.saloon.repository.StaffRepository staffRepository) {
         return args -> {
             if (roleRepository.findByName("ROLE_USER").isEmpty()) {
                 roleRepository.save(new Role(null, "ROLE_USER"));
             }
             if (roleRepository.findByName("ROLE_ADMIN").isEmpty()) {
                 roleRepository.save(new Role(null, "ROLE_ADMIN"));
+            }
+
+            if (serviceRepository.count() == 0) {
+                serviceRepository.save(new com.saloon.model.Service(null, "Luxury Haircut", "Full styling and wash", 50.0, 45, false));
+                serviceRepository.save(new com.saloon.model.Service(null, "Spa Treatment", "Full body massage", 120.0, 90, false));
+                serviceRepository.save(new com.saloon.model.Service(null, "Manicure", "Nail care and polish", 30.0, 30, false));
+            }
+
+            if (staffRepository.count() == 0) {
+                staffRepository.save(new com.saloon.model.Staff(null, "John Doe", "Master Stylist", "Mon-Fri", false));
+                staffRepository.save(new com.saloon.model.Staff(null, "Jane Smith", "Aroma Therapist", "Tue-Sat", false));
             }
         };
     }
