@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { getAdminStats } from '@/utils/api';
+import AnalyticsCharts from '@/components/AnalyticsCharts';
 
 export default function AdminDashboardPage() {
   const [stats, setStats] = useState<any>(null);
@@ -61,6 +62,8 @@ export default function AdminDashboardPage() {
           </div>
         ))}
       </div>
+
+      {stats && <AnalyticsCharts stats={stats} />}
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 text-center sm:text-left">
         <div className="lg:col-span-2 bg-white rounded-3xl p-8 border border-gray-100 shadow-xl shadow-purple-500/5">
