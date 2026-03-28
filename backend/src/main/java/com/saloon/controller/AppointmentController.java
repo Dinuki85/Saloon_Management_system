@@ -23,22 +23,22 @@ import java.util.stream.Collectors;
 @RequestMapping("/api/appointments")
 public class AppointmentController {
     @Autowired
-    private AppointmentRepository appointmentRepository;
+    private BookingService bookingService;
 
     @Autowired
     private UserRepository userRepository;
 
     @Autowired
-    private ServiceRepository serviceRepository;
+    private com.saloon.service.TreatmentService treatmentService;
 
     @Autowired
-    private StaffRepository staffRepository;
+    private com.saloon.service.StaffService staffService;
 
     @GetMapping("/available-slots")
     public List<String> getAvailableSlots(@RequestParam String date, @RequestParam Long staffId) {
         List<String> allSlots = TimeSlotUtils.generateTimeSlots();
-        List<String> bookedSlots = appointmentRepository.findAll().stream()
-                .filter(a -> a.getDate().equals(date) && a.getStaff().getId().equals(staffId) && a.getStatus() != AppointmentStatus.CANCELLED)
+        List<String> bookedSlots = bookingService.getAllAppointments().stream()
+                .filter(a -> a.getDate().toString().equals(date) && a.getStaff().getId().equals(staffId) && a.getStatus() != AppointmentStatus.CANCELLED)
                 .map(Appointment::getTimeSlot)
                 .collect(Collectors.toList());
 
@@ -48,13 +48,13 @@ public class AppointmentController {
     }
 
     @PostMapping
-    public ResponseEntity<?> bookAppointment(@RequestBody AppointmentRequest request) {
+    public ResponseEntity<?> bookAppointment(@RequestBody com.saloon.dto.BookingRequest request) {
         if (request.getUserId() == null || request.getServiceId() == null || request.getStaffId() == null) {
             return ResponseEntity.badRequest().body("User ID, Service ID, and Staff ID are required.");
         }
 
         // Double booking prevention
-        boolean isAlreadyBooked = appointmentRepository.findAll().stream()
+        boolean isAlreadyBooked = bookingService.getAllAppointments().stream()
                 .anyMatch(a -> a.getDate().equals(request.getDate()) 
                             && a.getStaff().getId().equals(request.getStaffId()) 
                             && a.getTimeSlot().equals(request.getTimeSlot())
@@ -65,7 +65,7 @@ public class AppointmentController {
         }
 
         // User conflict prevention
-        boolean hasUserConflict = appointmentRepository.findAll().stream()
+        boolean hasUserConflict = bookingService.getAllAppointments().stream()
                 .anyMatch(a -> a.getDate().equals(request.getDate()) 
                             && a.getUser().getId().equals(request.getUserId()) 
                             && a.getTimeSlot().equals(request.getTimeSlot())
@@ -77,10 +77,8 @@ public class AppointmentController {
 
         User user = userRepository.findById(request.getUserId())
                 .orElseThrow(() -> new RuntimeException("User not found"));
-        Service service = serviceRepository.findById(request.getServiceId())
-                .orElseThrow(() -> new RuntimeException("Service not found"));
-        Staff staff = staffRepository.findById(request.getStaffId())
-                .orElseThrow(() -> new RuntimeException("Staff not found"));
+        com.saloon.model.Service service = treatmentService.getServiceById(request.getServiceId());
+        Staff staff = staffService.getStaffById(request.getStaffId());
 
         Appointment appointment = new Appointment();
         appointment.setUser(user);
@@ -90,23 +88,22 @@ public class AppointmentController {
         appointment.setTimeSlot(request.getTimeSlot());
         appointment.setStatus(AppointmentStatus.PAYMENT_PENDING);
 
-        return ResponseEntity.ok(appointmentRepository.save(appointment));
+        return ResponseEntity.ok(bookingService.saveAppointment(appointment));
     }
 
     @GetMapping("/user/{userId}")
     public List<Appointment> getUserAppointments(@PathVariable Long userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found"));
-        return appointmentRepository.findByUser(user);
+        return bookingService.getAppointmentsByUser(user);
     }
 
     @PutMapping("/{id}/cancel")
     public ResponseEntity<?> cancelAppointment(@PathVariable Long id) {
-        Appointment appointment = appointmentRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Appointment not found"));
+        Appointment appointment = bookingService.getAppointmentById(id);
         
         appointment.setStatus(AppointmentStatus.CANCELLED);
-        appointmentRepository.save(appointment);
+        bookingService.saveAppointment(appointment);
         
         return ResponseEntity.ok().build();
     }
