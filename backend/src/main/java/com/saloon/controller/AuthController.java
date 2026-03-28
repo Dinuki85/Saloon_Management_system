@@ -78,27 +78,10 @@ public class AuthController {
                              encoder.encode(signUpRequest.getPassword()), 
                              new HashSet<>());
 
-        Set<String> strRoles = signUpRequest.getRole();
         Set<Role> roles = new HashSet<>();
-
-        if (strRoles == null || strRoles.isEmpty()) {
-            Role userRole = roleRepository.findByName("ROLE_USER")
-                    .orElseThrow(() -> new RuntimeException("Error: Role ROLE_USER not found."));
-            roles.add(userRole);
-        } else {
-            strRoles.forEach(role -> {
-                String roleLower = role.toLowerCase();
-                if (roleLower.equals("admin") || roleLower.equals("role_admin")) {
-                    Role adminRole = roleRepository.findByName("ROLE_ADMIN")
-                            .orElseThrow(() -> new RuntimeException("Error: Role ROLE_ADMIN not found."));
-                    roles.add(adminRole);
-                } else {
-                    Role userRole = roleRepository.findByName("ROLE_USER")
-                            .orElseThrow(() -> new RuntimeException("Error: Role ROLE_USER not found."));
-                    roles.add(userRole);
-                }
-            });
-        }
+        Role userRole = roleRepository.findByName("ROLE_USER")
+                .orElseThrow(() -> new RuntimeException("Error: Role ROLE_USER not found."));
+        roles.add(userRole);
 
         user.setRoles(roles);
         userRepository.save(user);
