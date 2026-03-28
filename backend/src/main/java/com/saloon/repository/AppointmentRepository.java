@@ -10,4 +10,6 @@ import java.util.List;
 @Repository
 public interface AppointmentRepository extends JpaRepository<Appointment, Long> {
     List<Appointment> findByUser(User user);
+    List<Appointment> findByDate(java.time.LocalDate date);
+    List<Appointment> findByDateAfter(java.time.LocalDate date);
 }
