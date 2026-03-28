@@ -1,21 +1,15 @@
 'use client';
 
 import Link from 'next/link';
-import { getCurrentUser, logout } from '@/utils/api';
+import { useAuth } from '@/hooks/useAuth';
 import { useRouter } from 'next/navigation';
-import { useState, useEffect } from 'react';
 
 const Navbar = () => {
-  const [user, setUser] = useState<any>(null);
+  const { user, logout } = useAuth();
   const router = useRouter();
-
-  useEffect(() => {
-    setUser(getCurrentUser());
-  }, []);
 
   const handleLogout = () => {
     logout();
-    setUser(null);
     router.push('/');
   };
 
