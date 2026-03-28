@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
@@ -63,6 +64,17 @@ public class AdminController {
                 .sum();
         stats.put("totalRevenue", revenue);
         
+        // Trend data (Last 7 days)
+        Map<String, Long> bookingsTrend = allAppointments.stream()
+                .collect(Collectors.groupingBy(Appointment::getDate, Collectors.counting()));
+        stats.put("bookingsTrend", bookingsTrend);
+
+        Map<String, Double> revenueTrend = allAppointments.stream()
+                .filter(a -> a.getStatus() == AppointmentStatus.COMPLETED)
+                .collect(Collectors.groupingBy(Appointment::getDate, 
+                        Collectors.summingDouble(a -> a.getService().getPrice())));
+        stats.put("revenueTrend", revenueTrend);
+
         return stats;
     }
 
