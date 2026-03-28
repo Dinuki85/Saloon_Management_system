@@ -14,7 +14,15 @@ import java.util.Date;
 import java.util.stream.Collectors;
 import org.springframework.security.core.GrantedAuthority;
 
-// ... (Component annotations) ...
+@Component
+public class JwtUtils {
+    private static final Logger logger = LoggerFactory.getLogger(JwtUtils.class);
+
+    @Value("${saloon.app.jwtSecret:bezKoderSecretKey}")
+    private String jwtSecret;
+
+    @Value("${saloon.app.jwtExpirationMs:86400000}")
+    private int jwtExpirationMs;
 
     public String generateJwtToken(Authentication authentication) {
         UserDetailsImpl userPrincipal = (UserDetailsImpl) authentication.getPrincipal();
