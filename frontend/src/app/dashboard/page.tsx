@@ -96,7 +96,8 @@ export default function DashboardPage() {
           <div className="p-8 border-b border-gray-100">
             <h2 className="text-xl font-bold text-gray-900">Your Appointments</h2>
           </div>
-          <div className="overflow-x-auto">
+          {/* Desktop Table */}
+          <div className="hidden md:block overflow-x-auto">
             <table className="w-full text-left">
               <thead className="bg-gray-50 text-gray-500 text-sm uppercase">
                 <tr>
@@ -120,15 +121,16 @@ export default function DashboardPage() {
                       <div className="text-sm text-gray-500">{appt.timeSlot}</div>
                     </td>
                     <td className="px-8 py-6">
-                      <span className={`px-3 py-1 rounded-full text-xs font-bold ${
+                      <span className={`px-3 py-1 rounded-full text-xs font-black uppercase tracking-tighter ${
                         appt.status === 'BOOKED' ? 'bg-blue-100 text-blue-600' :
+                        appt.status === 'ACCEPTED' ? 'bg-green-100 text-green-600' :
                         appt.status === 'CANCELLED' ? 'bg-red-100 text-red-600' :
-                        'bg-green-100 text-green-600'
+                        'bg-gray-100 text-gray-600'
                       }`}>
                         {appt.status}
                       </span>
                     </td>
-                    <td className="px-8 py-6">
+                    <td className="px-8 py-6 text-right">
                       {appt.status === 'BOOKED' && (
                         <button onClick={() => handleCancel(appt.id)} className="text-red-500 hover:text-red-700 text-sm font-bold transition-colors">
                           Cancel
@@ -137,16 +139,52 @@ export default function DashboardPage() {
                     </td>
                   </tr>
                 ))}
-                {appointments.length === 0 && (
-                  <tr>
-                    <td colSpan={5} className="px-8 py-20 text-center text-gray-500 italic">
-                      No appointments found. Start by booking a service!
-                    </td>
-                  </tr>
-                )}
               </tbody>
             </table>
           </div>
+
+          {/* Mobile Cards */}
+          <div className="md:hidden divide-y divide-gray-100">
+            {appointments.map((appt) => (
+              <div key={appt.id} className="p-6 space-y-4">
+                <div className="flex justify-between items-start">
+                  <div>
+                    <h3 className="font-black text-gray-900 text-lg uppercase tracking-tight">{appt.service.name}</h3>
+                    <p className="text-sm text-gray-500">with {appt.staff.name}</p>
+                  </div>
+                  <span className={`px-3 py-1 rounded-full text-xs font-bold ${
+                    appt.status === 'BOOKED' ? 'bg-blue-100 text-blue-600' :
+                    appt.status === 'CANCELLED' ? 'bg-red-100 text-red-600' :
+                    'bg-green-100 text-green-600'
+                  }`}>
+                    {appt.status}
+                  </span>
+                </div>
+                
+                <div className="flex items-center justify-between text-sm">
+                  <div className="text-gray-900 font-bold">
+                    {appt.date} at {appt.timeSlot}
+                  </div>
+                  <div className="text-purple-600 font-black">${appt.service.price}</div>
+                </div>
+
+                {appt.status === 'BOOKED' && (
+                  <button 
+                    onClick={() => handleCancel(appt.id)}
+                    className="w-full py-4 text-center bg-red-50 text-red-600 rounded-2xl text-sm font-black uppercase tracking-widest active:scale-95 transition-all"
+                  >
+                    Cancel Appointment
+                  </button>
+                )}
+              </div>
+            ))}
+          </div>
+
+          {appointments.length === 0 && (
+            <div className="px-8 py-20 text-center text-gray-500 italic">
+              No appointments found. Start by booking a service!
+            </div>
+          )}
         </div>
       </div>
     </div>

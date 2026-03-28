@@ -13,7 +13,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
   useEffect(() => {
     const currentUser = getCurrentUser();
-    if (!currentUser || currentUser.role !== 'ROLE_ADMIN') {
+    if (!currentUser || !currentUser.roles?.includes('ROLE_ADMIN')) {
       router.push('/login');
     } else {
       setUser(currentUser);
@@ -25,6 +25,8 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     { name: 'Services', href: '/admin/services', icon: '✂️' },
     { name: 'Staff', href: '/admin/staff', icon: '👥' },
     { name: 'Appointments', href: '/admin/appointments', icon: '📅' },
+    { name: 'Users', href: '/admin/users', icon: '👤' },
+    { name: 'Analytics', href: '/admin/analytics', icon: '📈' },
   ];
 
   if (!user) return null;
@@ -60,7 +62,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         </nav>
 
         <div className="p-4 border-t border-gray-100">
-          <button onClick={() => logout() && router.push('/')} className="w-full flex items-center gap-4 px-4 py-3 rounded-xl font-bold text-red-500 hover:bg-red-50 transition-all">
+          <button onClick={() => { logout(); router.push('/'); }} className="w-full flex items-center gap-4 px-4 py-3 rounded-xl font-bold text-red-500 hover:bg-red-50 transition-all">
             <span className="text-xl">🚪</span>
             {isSidebarOpen && <span>Logout</span>}
           </button>

@@ -38,11 +38,16 @@ public class AdminController {
 
     @Autowired
     private StaffRepository staffRepository;
+
+    @GetMapping("/users")
+    public ResponseEntity<List<com.saloon.model.User>> getAllUsers() {
+        return ResponseEntity.ok(userRepository.findAll());
+    }
     
     // Appointment Management (Paginated)
     @GetMapping("/appointments")
-    public Page<Appointment> getAllAppointments(Pageable pageable) {
-        return appointmentRepository.findAll(pageable);
+    public ResponseEntity<Page<Appointment>> getAllAppointments(Pageable pageable) {
+        return ResponseEntity.ok(appointmentRepository.findAll(pageable));
     }
 
     @PutMapping("/appointments/{id}/status")
@@ -54,7 +59,7 @@ public class AdminController {
     }
 
     @GetMapping("/stats")
-    public Map<String, Object> getDashboardStats() {
+    public ResponseEntity<Map<String, Object>> getDashboardStats() {
         Map<String, Object> stats = new HashMap<>();
         List<Appointment> allAppointments = appointmentRepository.findAll();
         
@@ -78,7 +83,7 @@ public class AdminController {
                         Collectors.summingDouble(a -> a.getService().getPrice())));
         stats.put("revenueTrend", revenueTrend);
 
-        return stats;
+        return ResponseEntity.ok(stats);
     }
 
     // Service Management

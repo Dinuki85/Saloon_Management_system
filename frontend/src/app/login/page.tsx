@@ -32,9 +32,10 @@ export default function LoginPage() {
     setSuccess('');
     setLoading(true);
 
-    try {
+        try {
       await login(formData);
-      router.push('/');
+      const redirect = searchParams.get('redirect') || '/';
+      router.push(redirect);
     } catch (err: any) {
       setError(err.message || 'Login failed. Please check your credentials.');
     } finally {
@@ -67,14 +68,14 @@ export default function LoginPage() {
         )}
 
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
-          <div className="rounded-md shadow-sm space-y-4">
-            <div>
-              <label htmlFor="email-address" className="sr-only">Email address</label>
-              <input id="email-address" name="email" type="email" required value={formData.email} onChange={handleChange} className="appearance-none rounded-xl relative block w-full px-4 py-3 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all" placeholder="Email address" />
+          <div className="space-y-4">
+            <div className="space-y-1">
+              <label htmlFor="email-address" className="text-xs font-black uppercase tracking-widest text-gray-400 ml-1">Email address</label>
+              <input id="email-address" name="email" type="email" required value={formData.email} onChange={handleChange} className="appearance-none rounded-2xl relative block w-full px-5 py-4 border border-gray-100 bg-gray-50 text-gray-900 focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all font-bold placeholder-gray-300" placeholder="admin@luxesaloon.com" />
             </div>
-            <div>
-              <label htmlFor="password" className="sr-only">Password</label>
-              <input id="password" name="password" type="password" required value={formData.password} onChange={handleChange} className="appearance-none rounded-xl relative block w-full px-4 py-3 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all" placeholder="Password" />
+            <div className="space-y-1">
+              <label htmlFor="password" className="text-xs font-black uppercase tracking-widest text-gray-400 ml-1">Password</label>
+              <input id="password" name="password" type="password" required value={formData.password} onChange={handleChange} className="appearance-none rounded-2xl relative block w-full px-5 py-4 border border-gray-100 bg-gray-50 text-gray-900 focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all font-bold placeholder-gray-300" placeholder="••••••••" />
             </div>
           </div>
 
@@ -87,9 +88,14 @@ export default function LoginPage() {
           </div>
 
           <div>
-            <button type="submit" disabled={loading} className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-bold rounded-xl text-white bg-purple-600 hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 transition-all shadow-lg hover:shadow-purple-500/20 disabled:opacity-50 disabled:cursor-not-allowed">
-              {loading ? 'Signing in...' : 'Sign In'}
+            <button type="submit" disabled={loading} className="group relative w-full flex justify-center py-4 px-4 border border-transparent text-sm font-black uppercase tracking-widest rounded-2xl text-white bg-purple-600 hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 transition-all shadow-xl shadow-purple-500/20 disabled:opacity-50 disabled:cursor-not-allowed">
+              {loading ? 'Authenticating...' : 'Sign In'}
             </button>
+          </div>
+          
+          <div className="bg-purple-50 p-4 rounded-2xl border border-purple-100">
+             <p className="text-[10px] font-black uppercase tracking-widest text-purple-600 mb-1">Administrator Access</p>
+             <p className="text-xs text-purple-500">Use <span className="font-bold">admin@luxesaloon.com</span> / <span className="font-bold">admin123</span></p>
           </div>
         </form>
         <div className="text-center">

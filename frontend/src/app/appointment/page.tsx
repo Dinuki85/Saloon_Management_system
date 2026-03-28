@@ -9,10 +9,11 @@ const TIME_SLOTS = [
   '01:00 PM', '02:00 PM', '03:00 PM', '04:00 PM', '05:00 PM'
 ];
 
-export default function BookingPage() {
+export default function AppointmentPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const initialServiceId = searchParams.get('service');
+  const initialStaffId = searchParams.get('staff');
 
   const [services, setServices] = useState<any[]>([]);
   const [staff, setStaff] = useState<any[]>([]);
@@ -22,7 +23,7 @@ export default function BookingPage() {
   
   const [formData, setFormData] = useState({
     serviceId: initialServiceId || '',
-    staffId: '',
+    staffId: initialStaffId || '',
     date: '',
     timeSlot: ''
   });
@@ -30,7 +31,7 @@ export default function BookingPage() {
   useEffect(() => {
     const user = getCurrentUser();
     if (!user) {
-      router.push('/login?redirect=/appointments');
+      router.push('/login?redirect=/appointment');
       return;
     }
 
@@ -87,8 +88,8 @@ export default function BookingPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-2xl mx-auto bg-white p-10 rounded-3xl shadow-2xl shadow-purple-500/5 border border-gray-100">
+    <div className="min-h-screen bg-gray-50 py-6 md:py-12 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-2xl mx-auto bg-white p-6 md:p-10 rounded-3xl shadow-2xl shadow-purple-500/5 border border-gray-100">
         <div className="text-center mb-10">
           <h1 className="text-3xl font-extrabold text-gray-900 tracking-tight">
             Book Your <span className="text-purple-600">Appointment</span>
@@ -106,7 +107,7 @@ export default function BookingPage() {
           <div className="space-y-4">
             <div>
               <label className="block text-sm font-bold text-gray-700 mb-2">Select Service</label>
-              <select name="serviceId" required value={formData.serviceId} onChange={handleChange} className="block w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all outline-none bg-white">
+              <select name="serviceId" required value={formData.serviceId} onChange={handleChange} className="block w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all outline-none bg-white font-medium">
                 <option value="">-- Choose a Service --</option>
                 {services.map(s => <option key={s.id} value={s.id}>{s.name} - ${s.price}</option>)}
               </select>
@@ -114,7 +115,7 @@ export default function BookingPage() {
 
             <div>
               <label className="block text-sm font-bold text-gray-700 mb-2">Select Stylist</label>
-              <select name="staffId" required value={formData.staffId} onChange={handleChange} className="block w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all outline-none bg-white">
+              <select name="staffId" required value={formData.staffId} onChange={handleChange} className="block w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all outline-none bg-white font-medium">
                 <option value="">-- Choose a Stylist --</option>
                 {staff.map(st => <option key={st.id} value={st.id}>{st.name} ({st.specialization})</option>)}
               </select>
@@ -123,11 +124,11 @@ export default function BookingPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <label className="block text-sm font-bold text-gray-700 mb-2">Select Date</label>
-                <input type="date" name="date" required min={new Date().toISOString().split('T')[0]} value={formData.date} onChange={handleChange} className="block w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all outline-none bg-white font-medium" />
+                <input type="date" name="date" required min={new Date().toISOString().split('T')[0]} value={formData.date} onChange={handleChange} className="block w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all outline-none bg-white font-medium shadow-sm" />
               </div>
               <div>
                 <label className="block text-sm font-bold text-gray-700 mb-2">Select Time</label>
-                <select name="timeSlot" required value={formData.timeSlot} onChange={handleChange} className="block w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all outline-none bg-white font-medium">
+                <select name="timeSlot" required value={formData.timeSlot} onChange={handleChange} className="block w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all outline-none bg-white font-medium shadow-sm">
                   <option value="">-- Choose Time --</option>
                   {TIME_SLOTS.map(slot => <option key={slot} value={slot}>{slot}</option>)}
                 </select>
@@ -136,8 +137,8 @@ export default function BookingPage() {
           </div>
 
           <div className="pt-6">
-            <button type="submit" disabled={submitting} className="w-full flex justify-center py-4 px-4 border border-transparent text-lg font-bold rounded-xl text-white bg-purple-600 hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 transition-all shadow-lg hover:shadow-purple-500/20 disabled:opacity-50 disabled:cursor-not-allowed">
-              {submitting ? 'Confirming Booking...' : 'Confirm Appointment'}
+            <button type="submit" disabled={submitting} className="w-full flex justify-center py-5 md:py-4 px-4 border border-transparent text-lg font-black rounded-2xl md:rounded-xl text-white bg-purple-600 hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 transition-all shadow-lg hover:shadow-purple-500/20 disabled:opacity-50 disabled:cursor-not-allowed uppercase tracking-widest">
+              {submitting ? 'Confirming...' : 'Confirm Booking'}
             </button>
           </div>
         </form>

@@ -17,6 +17,8 @@ import java.util.stream.Collectors;
 public class UserDetailsImpl implements UserDetails {
     private Long id;
     private String email;
+    private String firstName;
+    private String lastName;
 
     @JsonIgnore
     private String password;
@@ -31,6 +33,8 @@ public class UserDetailsImpl implements UserDetails {
         return new UserDetailsImpl(
                 user.getId(), 
                 user.getEmail(),
+                user.getFirstName(),
+                user.getLastName(),
                 user.getPassword(), 
                 authorities);
     }

@@ -35,6 +35,11 @@ public class AppointmentController {
     @Autowired
     private StaffService staffService;
 
+    @GetMapping
+    public List<Appointment> getAllAppointments() {
+        return bookingService.getAllAppointments();
+    }
+
     @GetMapping("/available-slots")
     public List<String> getAvailableSlots(@RequestParam String date, @RequestParam Long staffId) {
         List<String> allSlots = TimeSlotUtils.generateTimeSlots();
@@ -49,54 +54,71 @@ public class AppointmentController {
     }
 
     @PostMapping
-    public ResponseEntity<?> bookAppointment(@RequestBody AppointmentRequest request) {
-        if (request.getUserId() == null || request.getServiceId() == null || request.getStaffId() == null) {
-            return ResponseEntity.badRequest().body("User ID, Service ID, and Staff ID are required.");
+    public ResponseEntity<?> bookAppointment(@jakarta.validation.Valid @RequestBody AppointmentRequest request) {
+        System.out.println("Incoming booking request: " + request);
+        try {
+            LocalDate bookingDate;
+            try {
+                bookingDate = LocalDate.parse(request.getDate());
+            } catch (Exception e) {
+                return ResponseEntity.badRequest().body("Invalid date format. Expected yyyy-MM-dd.");
+            }
+
+            // Double booking prevention
+            if (bookingService.hasStylistConflict(request.getStaffId(), bookingDate, request.getTimeSlot())) {
+                return ResponseEntity.badRequest().body("This time slot is already booked for the selected stylist.");
+            }
+
+            // User conflict prevention
+            if (bookingService.hasUserConflict(request.getUserId(), bookingDate, request.getTimeSlot())) {
+                return ResponseEntity.badRequest().body("You already have an appointment at this time.");
+            }
+
+            User user = userRepository.findById(request.getUserId())
+                    .orElseThrow(() -> new RuntimeException("User not found with ID: " + request.getUserId()));
+            Service service = treatmentService.getServiceById(request.getServiceId());
+            Staff staff = staffService.getStaffById(request.getStaffId());
+
+            Appointment appointment = new Appointment();
+            appointment.setUser(user);
+            appointment.setService(service);
+            appointment.setStaff(staff);
+            appointment.setDate(bookingDate);
+            appointment.setTimeSlot(request.getTimeSlot());
+            appointment.setStatus(AppointmentStatus.PAYMENT_PENDING);
+
+            return ResponseEntity.ok(bookingService.saveAppointment(appointment));
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.badRequest().body("Booking failed: " + e.getMessage());
         }
-
-        // Double booking prevention
-        boolean isAlreadyBooked = bookingService.getAllAppointments().stream()
-                .anyMatch(a -> a.getDate().equals(LocalDate.parse(request.getDate())) 
-                            && a.getStaff().getId().equals(request.getStaffId()) 
-                            && a.getTimeSlot().equals(request.getTimeSlot())
-                            && a.getStatus() != AppointmentStatus.CANCELLED);
-        
-        if (isAlreadyBooked) {
-            return ResponseEntity.badRequest().body("This time slot is already booked for the selected stylist.");
-        }
-
-        // User conflict prevention
-        boolean hasUserConflict = bookingService.getAllAppointments().stream()
-                .anyMatch(a -> a.getDate().equals(LocalDate.parse(request.getDate())) 
-                            && a.getUser().getId().equals(request.getUserId()) 
-                            && a.getTimeSlot().equals(request.getTimeSlot())
-                            && a.getStatus() != AppointmentStatus.CANCELLED);
-
-        if (hasUserConflict) {
-            return ResponseEntity.badRequest().body("You already have an appointment at this time.");
-        }
-
-        User user = userRepository.findById(request.getUserId())
-                .orElseThrow(() -> new RuntimeException("User not found"));
-        Service service = treatmentService.getServiceById(request.getServiceId());
-        Staff staff = staffService.getStaffById(request.getStaffId());
-
-        Appointment appointment = new Appointment();
-        appointment.setUser(user);
-        appointment.setService(service);
-        appointment.setStaff(staff);
-        appointment.setDate(LocalDate.parse(request.getDate()));
-        appointment.setTimeSlot(request.getTimeSlot());
-        appointment.setStatus(AppointmentStatus.PAYMENT_PENDING);
-
-        return ResponseEntity.ok(bookingService.saveAppointment(appointment));
     }
 
     @GetMapping("/user/{userId}")
-    public List<Appointment> getUserAppointments(@PathVariable Long userId) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("User not found"));
-        return bookingService.getAppointmentsByUser(user);
+    public ResponseEntity<?> getUserAppointments(@PathVariable Long userId) {
+        try {
+            User user = userRepository.findById(userId)
+                    .orElse(null);
+            if (user == null) {
+                return ResponseEntity.notFound().build();
+            }
+            return ResponseEntity.ok(bookingService.getAppointmentsByUser(user));
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.internalServerError().body("Error fetching appointments: " + e.getMessage());
+        }
+    }
+
+    @PutMapping("/{id}/status")
+    public ResponseEntity<?> updateAppointmentStatus(@PathVariable Long id, @RequestParam AppointmentStatus status) {
+        try {
+            Appointment appointment = bookingService.getAppointmentById(id);
+            appointment.setStatus(status);
+            return ResponseEntity.ok(bookingService.saveAppointment(appointment));
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.badRequest().body("Failed to update status: " + e.getMessage());
+        }
     }
 
     @PutMapping("/{id}/cancel")

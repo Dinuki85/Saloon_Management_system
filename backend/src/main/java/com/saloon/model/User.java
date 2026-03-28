@@ -1,5 +1,7 @@
 package com.saloon.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -18,6 +20,7 @@ import java.util.Set;
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
 @AllArgsConstructor
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class User extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,7 +34,7 @@ public class User extends BaseEntity {
     @Column(nullable = false)
     private String email;
 
-    @Column(nullable = false)
+    @JsonIgnore
     private String password;
 
     @ManyToMany(fetch = FetchType.LAZY)

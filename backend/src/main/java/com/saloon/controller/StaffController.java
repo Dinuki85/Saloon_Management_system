@@ -29,9 +29,11 @@ public class StaffController {
 
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<Staff> updateStaff(@PathVariable Long id, @RequestBody Staff staffDetails) {
-        Staff staff = staffRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Staff not found with id: " + id));
+    public ResponseEntity<?> updateStaff(@PathVariable Long id, @RequestBody Staff staffDetails) {
+        Staff staff = staffRepository.findById(id).orElse(null);
+        if (staff == null) {
+            return ResponseEntity.notFound().build();
+        }
 
         staff.setName(staffDetails.getName());
         staff.setSpecialization(staffDetails.getSpecialization());
@@ -44,8 +46,10 @@ public class StaffController {
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> deleteStaff(@PathVariable Long id) {
-        Staff staff = staffRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Staff not found with id: " + id));
+        Staff staff = staffRepository.findById(id).orElse(null);
+        if (staff == null) {
+            return ResponseEntity.notFound().build();
+        }
 
         staffRepository.delete(staff);
         return ResponseEntity.ok().build();

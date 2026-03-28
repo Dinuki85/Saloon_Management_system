@@ -9,7 +9,7 @@ const TIME_SLOTS = [
   '01:00 PM', '02:00 PM', '03:00 PM', '04:00 PM', '05:00 PM'
 ];
 
-export default function BookingPage() {
+export default function AppointmentPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const initialServiceId = searchParams.get('service');

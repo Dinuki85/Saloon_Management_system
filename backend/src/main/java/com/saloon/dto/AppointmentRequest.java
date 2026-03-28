@@ -1,10 +1,17 @@
 package com.saloon.dto;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 public class AppointmentRequest {
+    @NotNull(message = "User ID is required")
     private Long userId;
+    @NotNull(message = "Service ID is required")
     private Long serviceId;
+    @NotNull(message = "Staff ID is required")
     private Long staffId;
+    @NotBlank(message = "Date is required")
     private String date;
+    @NotBlank(message = "Time slot is required")
     private String timeSlot;
 
     // Getters and Setters

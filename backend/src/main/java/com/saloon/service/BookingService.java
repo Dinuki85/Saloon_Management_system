@@ -39,4 +39,18 @@ public class BookingService {
         appointment.setStatus(com.saloon.model.AppointmentStatus.CANCELLED);
         appointmentRepository.save(appointment);
     }
+
+    public boolean hasStylistConflict(Long staffId, java.time.LocalDate date, String timeSlot) {
+        return appointmentRepository.existsByStaffIdAndDateAndTimeSlotAndStatusNotIn(
+                staffId, date, timeSlot, java.util.Arrays.asList(
+                        com.saloon.model.AppointmentStatus.CANCELLED, 
+                        com.saloon.model.AppointmentStatus.PAYMENT_FAILED));
+    }
+
+    public boolean hasUserConflict(Long userId, java.time.LocalDate date, String timeSlot) {
+        return appointmentRepository.existsByUserIdAndDateAndTimeSlotAndStatusNotIn(
+                userId, date, timeSlot, java.util.Arrays.asList(
+                        com.saloon.model.AppointmentStatus.CANCELLED, 
+                        com.saloon.model.AppointmentStatus.PAYMENT_FAILED));
+    }
 }

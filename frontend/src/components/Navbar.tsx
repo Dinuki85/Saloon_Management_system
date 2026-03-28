@@ -2,8 +2,9 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { useAuth } from '@/hooks/useAuth';
 import { useRouter } from 'next/navigation';
+import { motion, AnimatePresence } from 'framer-motion';
+import { useAuth } from '@/hooks/useAuth';
 
 const Navbar = () => {
   const { user, logout } = useAuth();
@@ -16,7 +17,7 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="bg-white/80 backdrop-blur-md sticky top-0 z-50 border-b border-gray-100">
+    <nav className="bg-white/70 backdrop-blur-xl sticky top-0 z-50 border-b border-white/20 shadow-sm hover:shadow-md transition-shadow">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16 items-center">
           <div className="flex-shrink-0 flex items-center">
@@ -39,9 +40,17 @@ const Navbar = () => {
               </Link>
             )}
             {user && user.roles && user.roles.includes('ROLE_ADMIN') && (
-              <Link href="/admin" className="text-purple-600 font-bold inline-flex items-center px-1 pt-1 border-b-2 border-transparent hover:border-purple-600 transition-colors">
-                Admin Panel
-              </Link>
+              <div className="flex space-x-4 border-l pl-6 border-gray-100 italic">
+                <Link href="/admin/appointments" className="text-purple-600 font-black inline-flex items-center px-1 pt-1 text-sm uppercase tracking-tighter hover:text-purple-800 transition-colors">
+                  Appointments
+                </Link>
+                <Link href="/admin/services" className="text-purple-600 font-black inline-flex items-center px-1 pt-1 text-sm uppercase tracking-tighter hover:text-purple-800 transition-colors">
+                  Services
+                </Link>
+                <Link href="/admin/staff" className="text-purple-600 font-black inline-flex items-center px-1 pt-1 text-sm uppercase tracking-tighter hover:text-purple-800 transition-colors">
+                  Staff
+                </Link>
+              </div>
             )}
           </div>
 
@@ -87,26 +96,56 @@ const Navbar = () => {
       </div>
 
       {/* Mobile Menu Content */}
-      {isMenuOpen && (
-        <div className="md:hidden bg-white border-b border-gray-100 px-2 pt-2 pb-3 space-y-1">
-          <Link href="/" className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50">Home</Link>
-          <Link href="/services" className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50">Services</Link>
-          {user && (
-            <Link href="/dashboard" className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50">Dashboard</Link>
-          )}
-          {user && user.roles && user.roles.includes('ROLE_ADMIN') && (
-            <Link href="/admin" className="block px-3 py-2 rounded-md text-base font-medium text-purple-600 hover:bg-gray-50">Admin Panel</Link>
-          )}
-          {!user ? (
-            <div className="pt-4 border-t border-gray-100">
-              <Link href="/login" className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50">Login</Link>
-              <Link href="/register" className="block px-3 py-2 rounded-md text-base font-medium text-purple-600 hover:bg-gray-50">Register</Link>
+      <AnimatePresence>
+        {isMenuOpen && (
+          <motion.div 
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: 'auto' }}
+            exit={{ opacity: 0, height: 0 }}
+            className="md:hidden bg-white/95 backdrop-blur-xl border-b border-gray-100 overflow-hidden"
+          >
+            <div className="px-4 pt-4 pb-8 space-y-3">
+              <Link href="/" onClick={() => setIsMenuOpen(false)} className="block px-4 py-3 rounded-2xl text-base font-bold text-gray-700 hover:text-purple-600 hover:bg-purple-50 transition-all">Home</Link>
+              <Link href="/services" onClick={() => setIsMenuOpen(false)} className="block px-4 py-3 rounded-2xl text-base font-bold text-gray-700 hover:text-purple-600 hover:bg-purple-50 transition-all">Services</Link>
+              <Link href="/staff" onClick={() => setIsMenuOpen(false)} className="block px-4 py-3 rounded-2xl text-base font-bold text-gray-700 hover:text-purple-600 hover:bg-purple-50 transition-all">Our Stylists</Link>
+              
+              {user && (
+                <Link href="/dashboard" onClick={() => setIsMenuOpen(false)} className="block px-4 py-3 rounded-2xl text-base font-bold text-gray-700 hover:text-purple-600 hover:bg-purple-50 transition-all">Dashboard</Link>
+              )}
+              
+              {user && user.roles && user.roles.includes('ROLE_ADMIN') && (
+                <div className="space-y-1 bg-purple-50 rounded-2xl p-2 border border-purple-100">
+                  <p className="px-4 py-2 text-[10px] font-black uppercase tracking-widest text-purple-600 italic">Admin Controls</p>
+                  <Link href="/admin" onClick={() => setIsMenuOpen(false)} className="block px-4 py-3 rounded-xl text-sm font-bold text-purple-700 hover:bg-white transition-colors">Dashboard</Link>
+                  <Link href="/admin/appointments" onClick={() => setIsMenuOpen(false)} className="block px-4 py-3 rounded-xl text-sm font-bold text-purple-700 hover:bg-white transition-colors">Appointments</Link>
+                  <Link href="/admin/services" onClick={() => setIsMenuOpen(false)} className="block px-4 py-3 rounded-xl text-sm font-bold text-purple-700 hover:bg-white transition-colors">Services</Link>
+                  <Link href="/admin/staff" onClick={() => setIsMenuOpen(false)} className="block px-4 py-3 rounded-xl text-sm font-bold text-purple-700 hover:bg-white transition-colors">Staff</Link>
+                </div>
+              )}
+
+              <div className="pt-4 border-t border-gray-100 flex flex-col gap-3">
+                <Link href="/appointment" onClick={() => setIsMenuOpen(false)} className="w-full bg-purple-600 text-white text-center py-4 rounded-2xl font-black shadow-lg shadow-purple-500/20 active:scale-95 transition-all">
+                  BOOK NOW
+                </Link>
+                
+                {!user ? (
+                  <>
+                    <Link href="/login" onClick={() => setIsMenuOpen(false)} className="w-full py-3 text-center text-gray-600 font-bold hover:bg-gray-50 rounded-2xl transition-all">Login</Link>
+                    <Link href="/register" onClick={() => setIsMenuOpen(false)} className="w-full py-3 text-center text-purple-600 font-bold hover:bg-purple-50 rounded-2xl transition-all">Register</Link>
+                  </>
+                ) : (
+                  <button 
+                    onClick={() => { handleLogout(); setIsMenuOpen(false); }} 
+                    className="w-full py-4 text-center text-red-600 font-bold hover:bg-red-50 rounded-2xl transition-all"
+                  >
+                    Logout
+                  </button>
+                )}
+              </div>
             </div>
-          ) : (
-            <button onClick={handleLogout} className="w-full text-left block px-3 py-2 rounded-md text-base font-medium text-red-600 hover:bg-gray-50">Logout</button>
-          )}
-        </div>
-      )}
+          </motion.div>
+        )}
+      </AnimatePresence>
     </nav>
   );
 };

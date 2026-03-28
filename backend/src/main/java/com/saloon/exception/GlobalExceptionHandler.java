@@ -1,4 +1,5 @@
 package com.saloon.exception;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 
 import com.saloon.dto.MessageResponse;
 import org.springframework.http.HttpStatus;
@@ -9,6 +10,13 @@ import org.springframework.web.context.request.WebRequest;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<?> handleValidationExceptions(MethodArgumentNotValidException ex) {
+        String errorMessage = ex.getBindingResult().getFieldErrors().stream()
+                .map(error -> error.getField() + ": " + error.getDefaultMessage())
+                .collect(java.util.stream.Collectors.joining(", "));
+        return new ResponseEntity<>(new MessageResponse("Error: " + errorMessage), HttpStatus.BAD_REQUEST);
+    }
 
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<?> handleRuntimeException(RuntimeException ex, WebRequest request) {

@@ -29,9 +29,11 @@ public class ServiceController {
 
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<Service> updateService(@PathVariable Long id, @RequestBody Service serviceDetails) {
-        Service service = serviceRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Service not found with id: " + id));
+    public ResponseEntity<?> updateService(@PathVariable Long id, @RequestBody Service serviceDetails) {
+        Service service = serviceRepository.findById(id).orElse(null);
+        if (service == null) {
+            return ResponseEntity.notFound().build();
+        }
 
         service.setName(serviceDetails.getName());
         service.setDescription(serviceDetails.getDescription());
@@ -45,8 +47,10 @@ public class ServiceController {
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> deleteService(@PathVariable Long id) {
-        Service service = serviceRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Service not found with id: " + id));
+        Service service = serviceRepository.findById(id).orElse(null);
+        if (service == null) {
+            return ResponseEntity.notFound().build();
+        }
 
         serviceRepository.delete(service);
         return ResponseEntity.ok().build();

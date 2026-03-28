@@ -15,7 +15,10 @@ public class SaloonApplication {
     }
 
     @Bean
-    CommandLineRunner init(RoleRepository roleRepository, com.saloon.repository.ServiceRepository serviceRepository, com.saloon.repository.StaffRepository staffRepository) {
+    CommandLineRunner init(RoleRepository roleRepository, 
+                          com.saloon.repository.ServiceRepository serviceRepository, 
+                          com.saloon.repository.StaffRepository staffRepository,
+                          com.saloon.repository.UserRepository userRepository) {
         return args -> {
             if (roleRepository.findByName("ROLE_USER").isEmpty()) {
                 roleRepository.save(new Role(null, "ROLE_USER"));
@@ -33,6 +36,19 @@ public class SaloonApplication {
             if (staffRepository.count() == 0) {
                 staffRepository.save(new com.saloon.model.Staff(null, "John Doe", "Master Stylist", "Mon-Fri", false));
                 staffRepository.save(new com.saloon.model.Staff(null, "Jane Smith", "Aroma Therapist", "Tue-Sat", false));
+            }
+
+            if (roleRepository.findByName("ROLE_ADMIN").isPresent() && userRepository.count() == 0) {
+                com.saloon.model.User admin = new com.saloon.model.User();
+                admin.setFirstName("Admin");
+                admin.setLastName("User");
+                admin.setEmail("admin@saloon.com");
+                admin.setPassword(new org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder().encode("admin123"));
+                java.util.Set<com.saloon.model.Role> roles = new java.util.HashSet<>();
+                roles.add(roleRepository.findByName("ROLE_ADMIN").get());
+                admin.setRoles(roles);
+                userRepository.save(admin);
+                System.out.println("Default admin user created: admin@saloon.com / admin123");
             }
         };
     }

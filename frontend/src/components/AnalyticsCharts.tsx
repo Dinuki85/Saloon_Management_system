@@ -72,7 +72,7 @@ export default function AnalyticsCharts({ stats }: { stats: any }) {
         backgroundColor: '#1f2937',
         padding: 12,
         cornerRadius: 12,
-        titleFont: { size: 14, weight: 'bold' },
+        titleFont: { size: 14, weight: 'bold' as const },
       }
     },
     scales: {
@@ -88,13 +88,17 @@ export default function AnalyticsCharts({ stats }: { stats: any }) {
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-      <div className="bg-white p-8 rounded-3xl border border-gray-100 shadow-xl shadow-purple-500/5">
-        <h3 className="text-xl font-bold text-gray-900 mb-6">Booking trends</h3>
-        <Line options={options} data={bookingData} />
+      <div className="bg-white p-8 rounded-3xl border border-gray-100 shadow-xl shadow-purple-500/5 hover:border-purple-200 transition-all">
+        <h3 className="text-xl font-bold text-gray-900 mb-6">Booking Analytics</h3>
+        <div className="h-80 relative">
+          <Line options={options} data={bookingData} />
+        </div>
       </div>
-      <div className="bg-white p-8 rounded-3xl border border-gray-100 shadow-xl shadow-purple-500/5">
+      <div className="bg-white p-8 rounded-3xl border border-gray-100 shadow-xl shadow-purple-500/5 hover:border-green-200 transition-all">
         <h3 className="text-xl font-bold text-gray-900 mb-6">Revenue Growth</h3>
-        <Line options={options} data={revenueData} />
+        <div className="h-80 relative">
+          <Line options={options} data={revenueData} />
+        </div>
       </div>
     </div>
   );
