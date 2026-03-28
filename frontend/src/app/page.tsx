@@ -31,7 +31,7 @@ export default function Home() {
               Book Appointment
             </Link>
           </div>
-        </div>
+        </motion.div>
       </section>
 
       {/* Services Section */}
@@ -58,7 +58,7 @@ export default function Home() {
                 <h3 className="text-2xl font-bold text-gray-900 mb-3">{service.name}</h3>
                 <p className="text-gray-500 mb-6 leading-relaxed">{service.desc}</p>
                 <div className="font-bold text-purple-600 text-xl">{service.price}</div>
-              </div>
+              </motion.div>
             ))}
           </div>
         </div>
