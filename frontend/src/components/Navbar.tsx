@@ -8,14 +8,12 @@ import { useRouter } from 'next/navigation';
 const Navbar = () => {
   const { user, logout } = useAuth();
   const router = useRouter();
+  const [isMenuOpen, setIsMenuOpen] = React.useState(false);
 
   const handleLogout = () => {
     logout();
     router.push('/');
   };
-
-  return (
-  const [isMenuOpen, setIsMenuOpen] = React.useState(false);
 
   return (
     <nav className="bg-white/80 backdrop-blur-md sticky top-0 z-50 border-b border-gray-100">
