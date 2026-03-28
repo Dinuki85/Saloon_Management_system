@@ -1,8 +1,15 @@
 package com.saloon.controller;
 
 import com.saloon.dto.AppointmentRequest;
-import com.saloon.model.*;
-import com.saloon.repository.*;
+import com.saloon.model.Appointment;
+import com.saloon.model.AppointmentStatus;
+import com.saloon.model.Service;
+import com.saloon.model.Staff;
+import com.saloon.model.User;
+import com.saloon.repository.AppointmentRepository;
+import com.saloon.repository.ServiceRepository;
+import com.saloon.repository.StaffRepository;
+import com.saloon.repository.UserRepository;
 import com.saloon.util.TimeSlotUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
