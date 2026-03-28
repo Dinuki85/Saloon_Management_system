@@ -109,7 +109,7 @@ export default function DashboardPage() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-100">
-                {appointments.filter(a => ['BOOKED', 'ACCEPTED'].includes(a.status)).map((appt) => (
+                {appointments.filter(a => ['BOOKED', 'ACCEPTED', 'PAYMENT_PENDING'].includes(a.status)).map((appt) => (
                   <tr key={appt.id} className="hover:bg-gray-50/50 transition-colors">
                     <td className="px-8 py-6">
                       <div className="font-bold text-gray-900">{appt.service.name}</div>
@@ -124,13 +124,14 @@ export default function DashboardPage() {
                       <span className={`px-3 py-1 rounded-full text-xs font-black uppercase tracking-tighter ${
                         appt.status === 'BOOKED' ? 'bg-blue-100 text-blue-600' :
                         appt.status === 'ACCEPTED' ? 'bg-green-100 text-green-600' :
+                        appt.status === 'PAYMENT_PENDING' ? 'bg-yellow-100 text-yellow-600' :
                         'bg-gray-100 text-gray-600'
                       }`}>
-                        {appt.status}
+                        {appt.status.replace('_', ' ')}
                       </span>
                     </td>
                     <td className="px-8 py-6 text-right">
-                      {appt.status === 'BOOKED' && (
+                      {['BOOKED', 'PAYMENT_PENDING'].includes(appt.status) && (
                         <button onClick={() => handleCancel(appt.id)} className="text-red-500 hover:text-red-700 text-sm font-bold transition-colors">
                           Cancel
                         </button>
@@ -149,7 +150,7 @@ export default function DashboardPage() {
           <div className="hidden md:block overflow-x-auto border-t border-gray-100">
             <table className="w-full text-left">
               <tbody className="divide-y divide-gray-100">
-                {appointments.filter(a => !['BOOKED', 'ACCEPTED'].includes(a.status)).map((appt) => (
+                {appointments.filter(a => !['BOOKED', 'ACCEPTED', 'PAYMENT_PENDING'].includes(a.status)).map((appt) => (
                   <tr key={appt.id} className="bg-white/50 opacity-60">
                     <td className="px-8 py-4">
                       <div className="font-bold text-gray-600">{appt.service.name}</div>
@@ -175,7 +176,7 @@ export default function DashboardPage() {
           {/* Mobile Cards */}
           <div className="md:hidden divide-y divide-gray-100">
             <div className="px-6 py-4 bg-gray-50/50 font-bold text-xs uppercase text-gray-400 tracking-widest">Active & Upcoming</div>
-            {appointments.filter(a => ['BOOKED', 'ACCEPTED'].includes(a.status)).map((appt) => (
+            {appointments.filter(a => ['BOOKED', 'ACCEPTED', 'PAYMENT_PENDING'].includes(a.status)).map((appt) => (
               <div key={appt.id} className="p-6 space-y-4">
                 <div className="flex justify-between items-start">
                   <div>
@@ -184,9 +185,11 @@ export default function DashboardPage() {
                   </div>
                   <span className={`px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest ${
                     appt.status === 'BOOKED' ? 'bg-blue-100 text-blue-600' :
-                    'bg-green-100 text-green-600'
+                    appt.status === 'ACCEPTED' ? 'bg-green-100 text-green-600' :
+                    appt.status === 'PAYMENT_PENDING' ? 'bg-yellow-100 text-yellow-600' :
+                    'bg-gray-100 text-gray-600'
                   }`}>
-                    {appt.status}
+                    {appt.status.replace('_', ' ')}
                   </span>
                 </div>
                 
@@ -197,7 +200,7 @@ export default function DashboardPage() {
                   <div className="text-purple-600 font-black">${appt.service.price}</div>
                 </div>
 
-                {appt.status === 'BOOKED' && (
+                {['BOOKED', 'PAYMENT_PENDING'].includes(appt.status) && (
                   <button 
                     onClick={() => handleCancel(appt.id)}
                     className="w-full py-4 text-center bg-red-50 text-red-600 rounded-2xl text-sm font-black uppercase tracking-widest active:scale-95 transition-all"
@@ -209,7 +212,7 @@ export default function DashboardPage() {
             ))}
             
             <div className="px-6 py-4 bg-gray-50/50 font-bold text-xs uppercase text-gray-400 tracking-widest border-t border-gray-100">History</div>
-            {appointments.filter(a => !['BOOKED', 'ACCEPTED'].includes(a.status)).map((appt) => (
+            {appointments.filter(a => !['BOOKED', 'ACCEPTED', 'PAYMENT_PENDING'].includes(a.status)).map((appt) => (
               <div key={appt.id} className="p-6 opacity-60 flex justify-between items-center text-sm">
                 <div>
                   <div className="font-bold text-gray-700">{appt.service.name}</div>
