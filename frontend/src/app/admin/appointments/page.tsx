@@ -60,8 +60,9 @@ export default function AdminAppointmentsPage() {
         {success && <div className="bg-green-50 text-green-600 p-4 rounded-xl mb-8 border border-green-100 font-medium">{success}</div>}
 
         <div className="bg-white rounded-3xl shadow-xl shadow-purple-500/5 border border-gray-100 overflow-hidden">
-          <div className="overflow-x-auto">
-            <table className="w-full text-left">
+          <div className="overflow-x-auto overflow-y-hidden">
+            <div className="min-w-[800px]"> {/* Force minimum width for table readability on mobile */}
+              <table className="w-full text-left">
               <thead className="bg-gray-50 text-gray-500 text-xs uppercase tracking-widest">
                 <tr>
                   <th className="px-8 py-5 font-black">Customer</th>
@@ -111,6 +112,7 @@ export default function AdminAppointmentsPage() {
                 ))}
               </tbody>
             </table>
+            </div>
           </div>
         </div>
       </div>

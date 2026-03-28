@@ -9,7 +9,19 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   const pathname = usePathname();
   const router = useRouter();
   const [user, setUser] = useState<any>(null);
-  const [isSidebarOpen, setSidebarOpen] = useState(true);
+  const [isSidebarOpen, setSidebarOpen] = useState(false); // Default to false for mobile
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const handleResize = () => {
+      const mobile = window.innerWidth < 1024;
+      setIsMobile(mobile);
+      if (!mobile) setSidebarOpen(true);
+    };
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   useEffect(() => {
     const currentUser = getCurrentUser();
@@ -33,8 +45,30 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
   return (
     <div className="min-h-screen bg-gray-50 flex items-stretch">
+      {/* Mobile Toggle */}
+      {isMobile && (
+        <button 
+          onClick={() => setSidebarOpen(!isSidebarOpen)}
+          className="fixed bottom-6 right-6 z-[60] bg-purple-600 text-white p-4 rounded-full shadow-2xl shadow-purple-500/30 active:scale-95 transition-all outline-none"
+        >
+          {isSidebarOpen ? '✖' : '☰'}
+        </button>
+      )}
+
+      {/* Sidebar Overlay */}
+      {isMobile && isSidebarOpen && (
+        <div 
+          className="fixed inset-0 bg-black/40 backdrop-blur-sm z-[45]" 
+          onClick={() => setSidebarOpen(false)}
+        />
+      )}
+
       {/* Sidebar */}
-      <aside className={`bg-white border-r border-gray-200 transition-all duration-300 z-40 ${isSidebarOpen ? 'w-64' : 'w-20'} flex flex-col sticky top-16 h-[calc(100vh-64px)] overflow-y-auto`}>
+      <aside className={`
+        ${isMobile ? 'fixed inset-y-0 left-0 z-50 shadow-2xl' : 'sticky top-16 h-[calc(100vh-64px)] z-40'}
+        bg-white border-r border-gray-200 transition-all duration-300 flex flex-col
+        ${isSidebarOpen ? 'w-64' : (isMobile ? 'w-0 overflow-hidden border-none' : 'w-20')}
+      `}>
         <div className="h-20 flex items-center px-6 border-b border-gray-100">
           <Link href="/admin" className="flex items-center gap-3">
             <span className="text-xl font-black text-gray-900 tracking-tighter">

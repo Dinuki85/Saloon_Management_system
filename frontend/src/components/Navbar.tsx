@@ -113,7 +113,6 @@ const Navbar = () => {
             <div className="px-4 pt-4 pb-8 space-y-3">
               <Link href="/" onClick={() => setIsMenuOpen(false)} className="block px-4 py-3 rounded-2xl text-base font-bold text-gray-700 hover:text-purple-600 hover:bg-purple-50 transition-all">Home</Link>
               <Link href="/services" onClick={() => setIsMenuOpen(false)} className="block px-4 py-3 rounded-2xl text-base font-bold text-gray-700 hover:text-purple-600 hover:bg-purple-50 transition-all">Services</Link>
-              <Link href="/staff" onClick={() => setIsMenuOpen(false)} className="block px-4 py-3 rounded-2xl text-base font-bold text-gray-700 hover:text-purple-600 hover:bg-purple-50 transition-all">Our Stylists</Link>
               
               {user && (
                 <div className="px-4 py-4 bg-purple-50 rounded-2xl border border-purple-100 mb-3">
@@ -123,21 +122,20 @@ const Navbar = () => {
               )}
               
               {user && (
-                <Link href="/dashboard" onClick={() => setIsMenuOpen(false)} className="block px-4 py-3 rounded-2xl text-base font-bold text-gray-700 hover:text-purple-600 hover:bg-purple-50 transition-all">Dashboard</Link>
+                <Link href="/dashboard" onClick={() => setIsMenuOpen(false)} className="block px-4 py-3 rounded-2xl text-base font-bold text-gray-700 hover:text-purple-600 hover:bg-purple-50 transition-all">My Appointments</Link>
               )}
               
               {user && user.roles && user.roles.includes('ROLE_ADMIN') && (
                 <div className="space-y-1 bg-purple-50 rounded-2xl p-2 border border-purple-100">
                   <p className="px-4 py-2 text-[10px] font-black uppercase tracking-widest text-purple-600 italic">Admin Controls</p>
-                  <Link href="/admin" onClick={() => setIsMenuOpen(false)} className="block px-4 py-3 rounded-xl text-sm font-bold text-purple-700 hover:bg-white transition-colors">Dashboard</Link>
-                  <Link href="/admin/appointments" onClick={() => setIsMenuOpen(false)} className="block px-4 py-3 rounded-xl text-sm font-bold text-purple-700 hover:bg-white transition-colors">Appointments</Link>
-                  <Link href="/admin/services" onClick={() => setIsMenuOpen(false)} className="block px-4 py-3 rounded-xl text-sm font-bold text-purple-700 hover:bg-white transition-colors">Services</Link>
-                  <Link href="/admin/staff" onClick={() => setIsMenuOpen(false)} className="block px-4 py-3 rounded-xl text-sm font-bold text-purple-700 hover:bg-white transition-colors">Staff</Link>
+                  <Link href="/admin/appointments" onClick={() => setIsMenuOpen(false)} className="block px-4 py-3 rounded-xl text-sm font-bold text-purple-700 hover:bg-white transition-colors">Manage Bookings</Link>
+                  <Link href="/admin/services" onClick={() => setIsMenuOpen(false)} className="block px-4 py-3 rounded-xl text-sm font-bold text-purple-700 hover:bg-white transition-colors">Manage Services</Link>
+                  <Link href="/admin/staff" onClick={() => setIsMenuOpen(false)} className="block px-4 py-3 rounded-xl text-sm font-bold text-purple-700 hover:bg-white transition-colors">Manage Staff</Link>
                 </div>
               )}
 
               <div className="pt-4 border-t border-gray-100 flex flex-col gap-3">
-                <Link href="/appointment" onClick={() => setIsMenuOpen(false)} className="w-full bg-purple-600 text-white text-center py-4 rounded-2xl font-black shadow-lg shadow-purple-500/20 active:scale-95 transition-all">
+                <Link href={user ? "/appointment" : "/login?redirect=/appointment"} onClick={() => setIsMenuOpen(false)} className="w-full bg-purple-600 text-white text-center py-4 rounded-2xl font-black shadow-lg shadow-purple-500/20 active:scale-95 transition-all">
                   BOOK NOW
                 </Link>
                 

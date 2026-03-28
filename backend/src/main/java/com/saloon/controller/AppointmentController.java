@@ -110,10 +110,17 @@ public class AppointmentController {
     }
 
     @PutMapping("/{id}/status")
-    public ResponseEntity<?> updateAppointmentStatus(@PathVariable Long id, @RequestParam AppointmentStatus status) {
+    public ResponseEntity<?> updateAppointmentStatus(@PathVariable Long id, @RequestParam String status) {
         try {
+            AppointmentStatus appointmentStatus;
+            try {
+                appointmentStatus = AppointmentStatus.valueOf(status.toUpperCase());
+            } catch (IllegalArgumentException e) {
+                return ResponseEntity.badRequest().body("Invalid status: " + status + ". Allowed values: ACCEPTED, REJECTED, COMPLETED, BOOKED, CANCELLED.");
+            }
+
             Appointment appointment = bookingService.getAppointmentById(id);
-            appointment.setStatus(status);
+            appointment.setStatus(appointmentStatus);
             return ResponseEntity.ok(bookingService.saveAppointment(appointment));
         } catch (Exception e) {
             e.printStackTrace();
