@@ -19,5 +19,7 @@ public class Payment {
     private PaymentStatus status;
 
     @Column(nullable = false)
-    private Long appointmentId;
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "appointment_id", nullable = false)
+    private Appointment appointment;
 }
