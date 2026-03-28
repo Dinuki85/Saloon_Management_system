@@ -44,23 +44,37 @@ public class AuthController {
     @Autowired
     JwtUtils jwtUtils;
 
+    @Autowired
+    LoginAttemptService loginAttemptService;
+
     @PostMapping("/login")
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
-        Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword()));
+        if (loginAttemptService.isBlocked(loginRequest.getEmail())) {
+            return ResponseEntity.status(429).body(new MessageResponse("Error: Too many login attempts. Please try again later."));
+        }
 
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-        String jwt = jwtUtils.generateJwtToken(authentication);
+        try {
+            Authentication authentication = authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword()));
 
-        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
-        List<String> roles = userDetails.getAuthorities().stream()
-                .map(item -> item.getAuthority())
-                .collect(Collectors.toList());
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+            String jwt = jwtUtils.generateJwtToken(authentication);
 
-        return ResponseEntity.ok(new JwtResponse(jwt, 
-                                                 userDetails.getId(), 
-                                                 userDetails.getEmail(), 
-                                                 roles));
+            UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+            List<String> roles = userDetails.getAuthorities().stream()
+                    .map(item -> item.getAuthority())
+                    .collect(Collectors.toList());
+
+            loginAttemptService.loginSucceeded(loginRequest.getEmail());
+
+            return ResponseEntity.ok(new JwtResponse(jwt, 
+                                                     userDetails.getId(), 
+                                                     userDetails.getEmail(), 
+                                                     roles));
+        } catch (Exception e) {
+            loginAttemptService.loginFailed(loginRequest.getEmail());
+            throw e;
+        }
     }
 
     @PostMapping("/register")
