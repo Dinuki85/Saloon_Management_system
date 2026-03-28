@@ -9,6 +9,7 @@ import com.saloon.model.User;
 import com.saloon.repository.RoleRepository;
 import com.saloon.repository.UserRepository;
 import com.saloon.security.JwtUtils;
+import com.saloon.service.LoginAttemptService;
 import com.saloon.security.UserDetailsImpl;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
