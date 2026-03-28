@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -38,7 +39,7 @@ public class AppointmentController {
     public List<String> getAvailableSlots(@RequestParam String date, @RequestParam Long staffId) {
         List<String> allSlots = TimeSlotUtils.generateTimeSlots();
         List<String> bookedSlots = bookingService.getAllAppointments().stream()
-                .filter(a -> a.getDate().toString().equals(date) && a.getStaff().getId().equals(staffId) && a.getStatus() != AppointmentStatus.CANCELLED)
+                .filter(a -> a.getDate().equals(LocalDate.parse(date)) && a.getStaff().getId().equals(staffId) && a.getStatus() != AppointmentStatus.CANCELLED)
                 .map(Appointment::getTimeSlot)
                 .collect(Collectors.toList());
 
@@ -55,7 +56,7 @@ public class AppointmentController {
 
         // Double booking prevention
         boolean isAlreadyBooked = bookingService.getAllAppointments().stream()
-                .anyMatch(a -> a.getDate().equals(request.getDate()) 
+                .anyMatch(a -> a.getDate().equals(LocalDate.parse(request.getDate())) 
                             && a.getStaff().getId().equals(request.getStaffId()) 
                             && a.getTimeSlot().equals(request.getTimeSlot())
                             && a.getStatus() != AppointmentStatus.CANCELLED);
@@ -66,7 +67,7 @@ public class AppointmentController {
 
         // User conflict prevention
         boolean hasUserConflict = bookingService.getAllAppointments().stream()
-                .anyMatch(a -> a.getDate().equals(request.getDate()) 
+                .anyMatch(a -> a.getDate().equals(LocalDate.parse(request.getDate())) 
                             && a.getUser().getId().equals(request.getUserId()) 
                             && a.getTimeSlot().equals(request.getTimeSlot())
                             && a.getStatus() != AppointmentStatus.CANCELLED);
@@ -84,7 +85,7 @@ public class AppointmentController {
         appointment.setUser(user);
         appointment.setService(service);
         appointment.setStaff(staff);
-        appointment.setDate(request.getDate());
+        appointment.setDate(LocalDate.parse(request.getDate()));
         appointment.setTimeSlot(request.getTimeSlot());
         appointment.setStatus(AppointmentStatus.PAYMENT_PENDING);
 
