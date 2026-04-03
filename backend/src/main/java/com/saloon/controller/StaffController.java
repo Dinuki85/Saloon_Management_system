@@ -18,7 +18,10 @@ public class StaffController {
 
     @GetMapping
     public List<Staff> getAllStaff() {
-        return staffRepository.findAll();
+        return staffRepository.findAll()
+                .stream()
+                .filter(staff -> !staff.isDeleted())
+                .collect(java.util.stream.Collectors.toList());
     }
 
     @PostMapping
@@ -51,7 +54,8 @@ public class StaffController {
             return ResponseEntity.notFound().build();
         }
 
-        staffRepository.delete(staff);
+        staff.setDeleted(true);
+        staffRepository.save(staff);
         return ResponseEntity.ok().build();
     }
 }
