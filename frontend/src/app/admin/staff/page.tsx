@@ -52,6 +52,8 @@ export default function AdminStaffPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setError('');
+    setSuccess('');
     try {
       if (editingMember) {
         await updateStaff(editingMember.id, formData);
@@ -70,6 +72,8 @@ export default function AdminStaffPage() {
 
   const handleDelete = async (id: number) => {
     if (!confirm('Are you sure you want to remove this staff member?')) return;
+    setError('');
+    setSuccess('');
     try {
       await deleteStaff(id);
       setSuccess('Staff member removed.');
