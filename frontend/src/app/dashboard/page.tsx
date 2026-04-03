@@ -41,6 +41,9 @@ export default function DashboardPage() {
   const handleCancel = async (id: number) => {
     if (!confirm('Are you sure you want to cancel this appointment?')) return;
     
+    setError('');
+    setSuccess('');
+    
     try {
       await cancelAppointment(id);
       setSuccess('Appointment cancelled successfully.');

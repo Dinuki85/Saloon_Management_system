@@ -133,8 +133,6 @@ public class AppointmentController {
         Appointment appointment = bookingService.getAppointmentById(id);
         
         appointment.setStatus(AppointmentStatus.CANCELLED);
-        bookingService.saveAppointment(appointment);
-        
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(bookingService.saveAppointment(appointment));
     }
 }
